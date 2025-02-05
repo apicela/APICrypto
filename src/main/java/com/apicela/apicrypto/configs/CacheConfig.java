@@ -1,38 +1,50 @@
 package com.apicela.apicrypto.configs;
-
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.time.Duration;
+import java.util.Arrays;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
-
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    private static RedisCacheConfiguration defaultCacheConfig(long timeout, TimeUnit unit) {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.of(timeout, unit.toChronoUnit()))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+
+    @Bean
+    public CaffeineCacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setAsyncCacheMode(true); // Habilitar modo assíncrono globalmente
+
+        // Configurar caches personalizados com suporte assíncrono
+        cacheManager.registerCustomCache("cache10Min", cache10Min().executor(ForkJoinPool.commonPool()).build());
+        cacheManager.registerCustomCache("cache1Dia", cache1Dia().executor(ForkJoinPool.commonPool()).build());
+
+        return cacheManager;
+    }
+    @Bean
+    public Caffeine<Object, Object> cache10Min() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.MINUTES) // Correct expiration for 10 min
+                .maximumSize(1000)
+                .removalListener((key, value, cause) -> {
+                    if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
+                        System.out.println("Cache de 10 minutos expirado - chave: " + key + ", valor: " + value);
+                    }
+                });
     }
 
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(defaultCacheConfig(10, TimeUnit.MINUTES)) // Padrão: 10 min
-                .withCacheConfiguration("cache10Min",
-                        defaultCacheConfig(10, TimeUnit.MINUTES)) // Expiração de 10 min
-                .withCacheConfiguration("cache1Hora",
-                        defaultCacheConfig(1, TimeUnit.HOURS)) // Expiração de 1 hora
-                .withCacheConfiguration("cache1Dia",
-                        defaultCacheConfig(1, TimeUnit.DAYS)) // Expiração de 1 dia
-                .build();
+    public Caffeine<Object, Object> cache1Dia() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(2, TimeUnit.MINUTES) // Expire after 1 day
+                .maximumSize(5000)
+                .removalListener((key, value, cause) -> {
+                    if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
+                        System.out.println("Cache de 1 dia expirado - chave: " + key + ", valor: " + value);
+                    }
+                });
     }
 }
