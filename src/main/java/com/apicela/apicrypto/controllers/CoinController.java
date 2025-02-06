@@ -1,14 +1,19 @@
 package com.apicela.apicrypto.controllers;
 
-import com.apicela.apicrypto.models.Coin;
+import com.apicela.apicrypto.dtos.Coin;
+import com.apicela.apicrypto.dtos.CoinResponse;
 import com.apicela.apicrypto.services.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
 
 @RestController()
 @CrossOrigin("*")
@@ -19,19 +24,20 @@ public class CoinController {
 
     @GetMapping()
     @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
-    public Flux<Coin> getAllCoins() {
-        return coinService.listAllCoins();
+    @Scheduled(cron = "0 */15 8-23 * * *")
+    public Mono<CoinResponse> getAllCoins() {
+        return coinService.listAllCoins()
+                .collectList()
+                .map(coins -> new CoinResponse(coins, LocalDateTime.now()));
     }
 
-    @GetMapping("/endpoint1")
-    @Cacheable(value = "cache10Min", key = "'testeHello'")
-    public String Hello() {
-        return "World";
-    }
+//    @GetMapping()
+//    @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
+//    @Scheduled(cron = "0 */15 8-23 * * *")
+//    public Mono<CoinResponse> getCoin() {
+//        return coinService.listAllCoins()
+//                .collectList()
+//                .map(coins -> new CoinResponse(coins, LocalDateTime.now()));
+//    }
 
-    @GetMapping("/endpoint2")
-    @Cacheable(value = "cache1Dia", key = "'testeHello2'")
-    public String World() {
-        return "World";
-    }
 }

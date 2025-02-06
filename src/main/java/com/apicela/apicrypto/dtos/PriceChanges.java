@@ -1,4 +1,4 @@
-package com.apicela.apicrypto.models;
+package com.apicela.apicrypto.dtos;
 
 
 public record PriceChanges(

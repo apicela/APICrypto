@@ -1,5 +1,7 @@
-package com.apicela.apicrypto.models;
+package com.apicela.apicrypto.dtos;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -21,14 +23,14 @@ public record Coin(
         double marketCapChangePercentage24h,
         long circulatingSupply,
         long totalSupply,
-        Long maxSupply, // Alterado para Long para permitir null
+        Long maxSupply,
         double ath,
         double athChangePercentage,
-        Date athDate, // Alterado para Date
+        LocalDateTime athDate,
         double atl,
         double atlChangePercentage,
-        Date atlDate, // Alterado para Date
-        Date lastUpdated, // Alterado para Date
+        LocalDateTime atlDate,
+        LocalDateTime lastUpdated,
         PriceChanges priceChanges
 ) {
 }

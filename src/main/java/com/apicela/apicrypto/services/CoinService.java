@@ -1,14 +1,14 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.models.Coin;
+import com.apicela.apicrypto.dtos.Coin;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class CoinService {
@@ -36,6 +36,10 @@ public class CoinService {
                 .uri(COINS_ENDPOINT + PARAMS)
                 .retrieve()
                 .bodyToFlux(Coin.class);
+    }
+
+    public Mono<Coin> getCoinById(String id) {
+        return null;
     }
 
 
