@@ -18,14 +18,20 @@ public class CoinController {
     CoinService coinService;
 
     @GetMapping()
-    @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'")
+    @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
     public Flux<Coin> getAllCoins() {
         return coinService.listAllCoins();
     }
 
-    @GetMapping("/hello")
-    @Cacheable(value = "cache1Dia", key = "'testeHello'")
+    @GetMapping("/endpoint1")
+    @Cacheable(value = "cache10Min", key = "'testeHello'")
     public String Hello() {
-        return "Hello World";
+        return "World";
+    }
+
+    @GetMapping("/endpoint2")
+    @Cacheable(value = "cache1Dia", key = "'testeHello2'")
+    public String World() {
+        return "World";
     }
 }

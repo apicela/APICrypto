@@ -18,9 +18,8 @@ public class CacheConfig {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setAsyncCacheMode(true); // Habilitar modo assíncrono globalmente
 
-        // Configurar caches personalizados com suporte assíncrono
-        cacheManager.registerCustomCache("cache10Min", cache10Min().executor(ForkJoinPool.commonPool()).build());
-        cacheManager.registerCustomCache("cache1Dia", cache1Dia().executor(ForkJoinPool.commonPool()).build());
+        cacheManager.registerCustomCache("cache10Min", cache10Min().buildAsync());
+        cacheManager.registerCustomCache("cache1Dia", cache1Dia().buildAsync());
 
         return cacheManager;
     }
