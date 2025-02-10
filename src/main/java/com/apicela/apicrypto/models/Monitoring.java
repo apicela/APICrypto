@@ -1,12 +1,10 @@
 package com.apicela.apicrypto.models;
 
 import com.apicela.apicrypto.dtos.MonitoringDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "monitorings")
 public class Monitoring {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
