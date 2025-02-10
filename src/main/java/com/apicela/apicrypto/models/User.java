@@ -1,5 +1,6 @@
 package com.apicela.apicrypto.models;
 
+import com.apicela.apicrypto.dtos.UserDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,18 +9,18 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private Long id;
     private String name;
     private String lastName;
     private String mail;
     private String password;
 
-    public User(String name, String lastName, String mail, String password) {
-        this.name = name;
-        this.lastName = lastName;
-        this.mail = mail;
-        this.password = password;
+    public User(UserDTO userDTO) {
+        this.name = userDTO.name();
+        this.lastName = userDTO.lastName();
+        this.mail = userDTO.mail();
+        this.password = null;
     }
 
     public User() {}
