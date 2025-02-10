@@ -18,7 +18,7 @@ public class CacheConfig {
         cacheManager.setAsyncCacheMode(true); // Habilitar modo assíncrono globalmente
 
         cacheManager.registerCustomCache("cache10Min", cache10Min().buildAsync());
-        cacheManager.registerCustomCache("cache1Dia", cache1Dia().buildAsync());
+//        cacheManager.registerCustomCache("cache1Dia", cache1Dia().buildAsync());
 
         return cacheManager;
     }
@@ -26,7 +26,7 @@ public class CacheConfig {
     @Bean
     public Caffeine<Object, Object> cache10Min() {
         return Caffeine.newBuilder()
-                .expireAfterWrite(1, TimeUnit.MINUTES) // Correct expiration for 10 min
+                .expireAfterWrite(10, TimeUnit.MINUTES) // Correct expiration for 10 min
                 .maximumSize(1000)
                 .removalListener((key, value, cause) -> {
                     if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
@@ -35,15 +35,15 @@ public class CacheConfig {
                 });
     }
 
-    @Bean
-    public Caffeine<Object, Object> cache1Dia() {
-        return Caffeine.newBuilder()
-                .expireAfterWrite(2, TimeUnit.MINUTES) // Expire after 1 day
-                .maximumSize(5000)
-                .removalListener((key, value, cause) -> {
-                    if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
-                        System.out.println("Cache de 1 dia expirado - chave: " + key + ", valor: " + value);
-                    }
-                });
-    }
+//    @Bean
+//    public Caffeine<Object, Object> cache1Dia() {
+//        return Caffeine.newBuilder()
+//                .expireAfterWrite(2, TimeUnit.MINUTES) // Expire after 1 day
+//                .maximumSize(5000)
+//                .removalListener((key, value, cause) -> {
+//                    if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
+//                        System.out.println("Cache de 1 dia expirado - chave: " + key + ", valor: " + value);
+//                    }
+//                });
+//    }
 }
