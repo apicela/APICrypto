@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 public class CoinDeserializer extends JsonDeserializer<Coin> {
     @Override
@@ -50,7 +48,7 @@ public class CoinDeserializer extends JsonDeserializer<Coin> {
                 node.path("max_supply").isNull() ? null : node.path("max_supply").asLong(), // Trata max_supply como null se for nulo
                 node.path("ath").asDouble(),
                 node.path("ath_change_percentage").asDouble(),
-                node.path("ath_date").isNull() ? null :  DateUtils.parseDate(node.path("ath_date").asText()), // Trata ath_date como null se for nulo
+                node.path("ath_date").isNull() ? null : DateUtils.parseDate(node.path("ath_date").asText()), // Trata ath_date como null se for nulo
                 node.path("atl").asDouble(),
                 node.path("atl_change_percentage").asDouble(),
                 node.path("atl_date").isNull() ? null : DateUtils.parseDate(node.path("atl_date").asText()), // Trata atl_date como null se for nulo

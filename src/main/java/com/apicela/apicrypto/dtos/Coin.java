@@ -1,8 +1,6 @@
 package com.apicela.apicrypto.dtos;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 public record Coin(

@@ -5,10 +5,10 @@ import com.apicela.apicrypto.serialization.CoinDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.junit.jupiter.api.BeforeEach;  // Alterado para @BeforeEach do JUnit 5
-import org.junit.jupiter.api.Test;       // Alterado para @Test do JUnit 5
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;  // Usando Assertions do JUnit 5
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CoinDeserializerTest {
