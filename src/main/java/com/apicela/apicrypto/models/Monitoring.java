@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.models;
 
-import com.apicela.apicrypto.dtos.MonitoringDTO;
+import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import jakarta.persistence.*;
 
 @Entity

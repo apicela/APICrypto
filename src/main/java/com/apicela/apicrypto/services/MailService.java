@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.dtos.Mail;
+import com.apicela.apicrypto.models.dtos.Mail;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

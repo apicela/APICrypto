@@ -1,6 +1,6 @@
 package com.apicela.apicrypto;
 
-import com.apicela.apicrypto.dtos.Coin;
+import com.apicela.apicrypto.models.dtos.Coin;
 import com.apicela.apicrypto.serialization.CoinDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

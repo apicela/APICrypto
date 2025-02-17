@@ -1,4 +1,4 @@
-package com.apicela.apicrypto.dtos;
+package com.apicela.apicrypto.models.dtos;
 
 import java.time.LocalDateTime;
 

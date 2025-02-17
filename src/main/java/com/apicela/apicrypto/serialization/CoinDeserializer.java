@@ -1,7 +1,7 @@
 package com.apicela.apicrypto.serialization;
 
-import com.apicela.apicrypto.dtos.Coin;
-import com.apicela.apicrypto.dtos.PriceChanges;
+import com.apicela.apicrypto.models.dtos.Coin;
+import com.apicela.apicrypto.models.dtos.PriceChanges;
 import com.apicela.apicrypto.utils.DateUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

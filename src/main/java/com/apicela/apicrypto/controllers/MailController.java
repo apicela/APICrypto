@@ -1,7 +1,8 @@
 package com.apicela.apicrypto.controllers;
 
-import com.apicela.apicrypto.dtos.Mail;
+import com.apicela.apicrypto.models.dtos.Mail;
 import com.apicela.apicrypto.services.MailService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/mail")
+@Tag(name = "Mail Controller")
 public class MailController {
     private final MailService mailService;
 

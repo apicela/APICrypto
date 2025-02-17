@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.dtos.Coin;
+import com.apicela.apicrypto.models.dtos.Coin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
@@ -32,16 +32,19 @@ public class CoinService {
     public Flux<Coin> listAllCoins() {
         String COINS_ENDPOINT = "/coins/markets";
         String PARAMS = "?vs_currency=brl&price_change_percentage=1h,24h,7d,14d,30d,200d,1y";
-        System.out.println("CACHED");
         return webClient.get()
                 .uri(COINS_ENDPOINT + PARAMS)
                 .retrieve()
                 .bodyToFlux(Coin.class);
     }
 
-    public Mono<Coin> getCoinById(String id) {
-        return null;
+
+
+    public Mono<Coin> findById(String name) {
+        String ENDPOINT = "/coins/" + name;
+        return webClient.get()
+                .uri(ENDPOINT)
+                .retrieve()
+                .bodyToMono(Coin.class);
     }
-
-
 }

@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.models;
 
-import com.apicela.apicrypto.dtos.UserDTO;
+import com.apicela.apicrypto.models.dtos.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.UUID;

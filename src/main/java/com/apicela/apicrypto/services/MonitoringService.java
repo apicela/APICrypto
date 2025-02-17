@@ -1,8 +1,8 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.dtos.MonitoringDTO;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.models.Monitoring;
+import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.apicela.apicrypto.repositories.MonitoringRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.dtos.UserDTO;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.models.User;
+import com.apicela.apicrypto.models.dtos.UserDTO;
 import com.apicela.apicrypto.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
