@@ -23,8 +23,6 @@ public class CoinController {
     CoinService coinService;
 
     @GetMapping()
-    @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
-    @Scheduled(cron = "0 */15 8-23 * * *")
     public Mono<CoinListResponseDTO> getAllCoins() {
         return coinService.listAllCoins()
                 .collectList()
@@ -32,7 +30,6 @@ public class CoinController {
     }
 
     @GetMapping("/{id}")
-    @Cacheable(value = "cache1Min", key = "'CoinCache'", sync = true)
     public Mono<ResponseEntity<Coin>> getCoinById(@PathVariable(value = "id") String name) {
         return coinService.findById(name)
                 .map(coin -> ResponseEntity.status(HttpStatus.OK).body(coin))

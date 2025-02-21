@@ -19,8 +19,15 @@ public class CacheConfig {
 
         cacheManager.registerCustomCache("cache10Min", cache10Min().buildAsync());
         cacheManager.registerCustomCache("cache1Min", cache1Min().buildAsync());
+        cacheManager.registerCustomCache("cache512size", cache512entrys().buildAsync());
 
         return cacheManager;
+    }
+
+    @Bean
+    public Caffeine<Object, Object> cache512entrys() {
+        return Caffeine.newBuilder()
+                .maximumSize(512);
     }
 
     @Bean

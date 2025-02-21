@@ -1,20 +1,31 @@
 package com.apicela.apicrypto.services;
 
 import com.apicela.apicrypto.models.dtos.Coin;
+import com.apicela.apicrypto.models.dtos.Mail;
+import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CoinService {
     private final WebClient webClient;
+    private final MonitoringService monitoringService;
+    private final MailService mailService;
 
-    public CoinService(ObjectMapper objectMapper) {
+    public CoinService(ObjectMapper objectMapper, MonitoringService monitoringService, MailService mailService) {
         // Configura o WebClient para usar o ObjectMapper personalizado
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> {
@@ -27,19 +38,44 @@ public class CoinService {
                 .baseUrl("https://api.coingecko.com/api/v3")
                 .exchangeStrategies(strategies)
                 .build();
+
+        this.monitoringService = monitoringService;
+        this.mailService = mailService;
     }
 
+    @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
+    @Scheduled(cron = "0 */15 8-23 * * *")
     public Flux<Coin> listAllCoins() {
         String COINS_ENDPOINT = "/coins/markets";
         String PARAMS = "?vs_currency=brl&price_change_percentage=1h,24h,7d,14d,30d,200d,1y";
         return webClient.get()
                 .uri(COINS_ENDPOINT + PARAMS)
                 .retrieve()
-                .bodyToFlux(Coin.class);
+                .bodyToFlux(Coin.class)
+                .doOnNext(this::checkAndNotify);
     }
 
+    private void checkAndNotify(Coin coin) {
+        var monitoredItemsList = monitoringService.getMonitoringIdsForCoin(coin.id());
+        List<Mail> usersToSendMail = new ArrayList<>();
+        if (!monitoredItemsList.isEmpty()) {
+            for (Long id : monitoredItemsList) {
+                var monitoredItem = monitoringService.findById(id).get();
+                verifyConditionsToSendMail(monitoredItem, coin);
+            }
+        }
+    }
 
+    private void verifyConditionsToSendMail(MonitoringDTO monitoredItem, Coin coin) {
+        if (monitoredItem.greatherThan() && coin.currentPrice() >= monitoredItem.price()) {
+            mailService.sendMail(monitoredItem.userId(), coin);
+              Mail mail = new Mail(monitoredItem.userId(), "Preço mudou!", "");
+        } else if (!monitoredItem.greatherThan() && coin.currentPrice() <= monitoredItem.price()) {
 
+        }
+    }
+
+    @Cacheable(value = "cache1Min", key = "'CoinCache'", sync = true)
     public Mono<Coin> findById(String name) {
         String ENDPOINT = "/coins/" + name;
         return webClient.get()

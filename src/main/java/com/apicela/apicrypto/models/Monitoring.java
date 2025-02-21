@@ -11,15 +11,25 @@ public class Monitoring {
     long id;
     long userId;
     String coinId;
-    float percentageDifference;
+    double price;
+    boolean greatherThan;
 
     public Monitoring(MonitoringDTO monitoringDTO) {
         this.userId = monitoringDTO.userId();
         this.coinId = monitoringDTO.coinId();
-        this.percentageDifference = monitoringDTO.percentageDifference();
+        this.price = monitoringDTO.price();
+        this.greatherThan = monitoringDTO.greatherThan();
     }
 
     public Monitoring() {}
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public long getUserId() {
         return userId;
@@ -37,11 +47,19 @@ public class Monitoring {
         this.coinId = coinId;
     }
 
-    public float getPercentageDifference() {
-        return percentageDifference;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPercentageDifference(float percentageDifference) {
-        this.percentageDifference = percentageDifference;
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isGreatherThan() {
+        return greatherThan;
+    }
+
+    public void setGreatherThan(boolean greatherThan) {
+        this.greatherThan = greatherThan;
     }
 }
