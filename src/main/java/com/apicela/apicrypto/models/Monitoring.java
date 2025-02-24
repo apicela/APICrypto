@@ -3,13 +3,15 @@ package com.apicela.apicrypto.models;
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "monitorings")
 public class Monitoring {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    long userId;
+    UUID userId;
     String coinId;
     double price;
     boolean greatherThan;
@@ -31,11 +33,11 @@ public class Monitoring {
         this.id = id;
     }
 
-    public long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

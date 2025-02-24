@@ -61,18 +61,11 @@ public class CoinService {
         if (!monitoredItemsList.isEmpty()) {
             for (Long id : monitoredItemsList) {
                 var monitoredItem = monitoringService.findById(id).get();
-                verifyConditionsToSendMail(monitoredItem, coin);
+                Mail notify = monitoringService.verifyConditionsToSendMail(monitoredItem, coin);
+                if(notify != null) usersToSendMail.add(notify);
             }
         }
-    }
-
-    private void verifyConditionsToSendMail(MonitoringDTO monitoredItem, Coin coin) {
-        if (monitoredItem.greatherThan() && coin.currentPrice() >= monitoredItem.price()) {
-            mailService.sendMail(monitoredItem.userId(), coin);
-              Mail mail = new Mail(monitoredItem.userId(), "Preço mudou!", "");
-        } else if (!monitoredItem.greatherThan() && coin.currentPrice() <= monitoredItem.price()) {
-
-        }
+        mailService.sendMultipleMails(usersToSendMail);
     }
 
     @Cacheable(value = "cache1Min", key = "'CoinCache'", sync = true)
