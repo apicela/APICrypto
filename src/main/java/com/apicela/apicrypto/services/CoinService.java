@@ -2,10 +2,8 @@ package com.apicela.apicrypto.services;
 
 import com.apicela.apicrypto.models.dtos.Coin;
 import com.apicela.apicrypto.models.dtos.Mail;
-import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
@@ -16,10 +14,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Log4j2
 public class CoinService {
     private final WebClient webClient;
     private final MonitoringService monitoringService;
@@ -47,7 +47,8 @@ public class CoinService {
     @Scheduled(cron = "0 */15 8-23 * * *")
     public Flux<Coin> listAllCoins() {
         String COINS_ENDPOINT = "/coins/markets";
-        String PARAMS = "?vs_currency=brl&price_change_percentage=1h,24h,7d,14d,30d,200d,1y";
+        String PARAMS = "?vs_currency=brl&price_change_percentage=1h,24h,7d,14d,30d,200d,1y&localization=false&developer_data=false";
+        log.info("Valores das criptomoedas atualizadas na cache. {}", LocalDateTime.now());
         return webClient.get()
                 .uri(COINS_ENDPOINT + PARAMS)
                 .retrieve()
@@ -60,7 +61,7 @@ public class CoinService {
         List<Mail> usersToSendMail = new ArrayList<>();
         if (!monitoredItemsList.isEmpty()) {
             for (Long id : monitoredItemsList) {
-                var monitoredItem = monitoringService.findById(id).get();
+                var monitoredItem = monitoringService.findById(id);
                 Mail notify = monitoringService.verifyConditionsToSendMail(monitoredItem, coin);
                 if(notify != null) usersToSendMail.add(notify);
             }
@@ -68,9 +69,10 @@ public class CoinService {
         mailService.sendMultipleMails(usersToSendMail);
     }
 
-    @Cacheable(value = "cache1Min", key = "'CoinCache'", sync = true)
+    @Cacheable(value = "cache1Min", key = "#name", sync = true)
     public Mono<Coin> findById(String name) {
         String ENDPOINT = "/coins/" + name;
+        log.info("Valor da criptomoeda {} atualizada na cache. {}", name, LocalDateTime.now());
         return webClient.get()
                 .uri(ENDPOINT)
                 .retrieve()

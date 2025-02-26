@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI api() {
         return new OpenAPI().
                 components(new Components())
-                .info(new Info().title("API AIKO").version("1.0.0")
-                        .description("REST API documentation"));
+                .info(new Info().title("API CRYPTO").version("1.0.0")
+                        .description("REST API documentation for cryptomoedas from Coin Gecko API"));
     }
 }

@@ -38,5 +38,4 @@ out/
 
 
 ### java application
-/src/main/resources/application.properties
-src/main/resources/application.properties
+src/main/resources/application-prd.properties

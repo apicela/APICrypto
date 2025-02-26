@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 
 public class DateUtils {
     public static LocalDateTime parseDate(String dateStr) {
+        System.out.println("parseDatE: " + dateStr);
         // Parse the date string as an Instant first (handles 'Z' suffix)
         Instant instant = Instant.parse(dateStr);
         // Convert the Instant to LocalDateTime in UTC

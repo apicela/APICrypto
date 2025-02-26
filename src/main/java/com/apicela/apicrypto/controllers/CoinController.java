@@ -5,10 +5,8 @@ import com.apicela.apicrypto.models.dtos.CoinListResponseDTO;
 import com.apicela.apicrypto.services.CoinService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -32,9 +30,7 @@ public class CoinController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Coin>> getCoinById(@PathVariable(value = "id") String name) {
         return coinService.findById(name)
-                .map(coin -> ResponseEntity.status(HttpStatus.OK).body(coin))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .map(coin -> ResponseEntity.status(HttpStatus.OK).body(coin));
     }
-
 
 }

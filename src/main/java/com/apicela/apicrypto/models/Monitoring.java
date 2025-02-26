@@ -15,6 +15,7 @@ public class Monitoring {
     String coinId;
     double price;
     boolean greatherThan;
+    boolean isDeleted = false;
 
     public Monitoring(MonitoringDTO monitoringDTO) {
         this.userId = monitoringDTO.userId();
@@ -31,6 +32,10 @@ public class Monitoring {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public UUID getUserId() {

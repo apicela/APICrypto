@@ -15,6 +15,7 @@ public class User {
     private String lastName;
     private String mail;
     private String password;
+    private boolean isDeleted = false;
 
     public User(UserDTO userDTO) {
         this.name = userDTO.name();
@@ -24,6 +25,10 @@ public class User {
     }
 
     public User() {}
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public String getName() {
         return name;

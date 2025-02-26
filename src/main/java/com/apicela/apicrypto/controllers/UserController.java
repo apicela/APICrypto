@@ -8,8 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -24,17 +24,20 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "CREATE", description = "Here, you can create a new object for your entity")
-    public ResponseEntity<Object> saveUser(@RequestBody @Valid UserDTO userDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userDTO));
+    public Mono<ResponseEntity<Object>> saveUser(@RequestBody @Valid UserDTO userDTO) {
+        return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userDTO)));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
-    public ResponseEntity<Object> getUserById(@PathVariable(value = "id") UUID id) {
-        Optional<UserDTO> userOptional = userService.findById(id);
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
+    public Mono<ResponseEntity<Object>> getUserById(@PathVariable(value = "id") UUID id) {
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userService.findById(id)));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
+    public Mono<ResponseEntity<Object>> deleteMonitoring(@PathVariable(value = "id") UUID id) {
+        userService.deleteById(id);
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body("User " + id + " deleted with successful!"));
     }
 }
