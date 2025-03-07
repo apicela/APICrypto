@@ -1,6 +1,7 @@
 package com.apicela.apicrypto.models;
 
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
+import com.apicela.apicrypto.models.dtos.UpdateMonitoringDTO;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -22,6 +23,12 @@ public class Monitoring {
         this.coinId = monitoringDTO.coinId();
         this.price = monitoringDTO.price();
         this.greatherThan = monitoringDTO.greatherThan();
+    }
+
+    public Monitoring(UpdateMonitoringDTO updateMonitoringDTO){
+        this.price = updateMonitoringDTO.price();
+        this.greatherThan = updateMonitoringDTO.greatherThan();
+        this.coinId = updateMonitoringDTO.coinId();
     }
 
     public Monitoring() {}

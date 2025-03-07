@@ -1,13 +1,12 @@
 package com.apicela.apicrypto.services;
 
 import com.apicela.apicrypto.exceptions.SaveException;
+import com.apicela.apicrypto.exceptions.UpdateException;
 import com.apicela.apicrypto.models.Monitoring;
-import com.apicela.apicrypto.models.dtos.Coin;
-import com.apicela.apicrypto.models.dtos.Mail;
-import com.apicela.apicrypto.models.dtos.MonitoringDTO;
-import com.apicela.apicrypto.models.dtos.UserDTO;
+import com.apicela.apicrypto.models.dtos.*;
 import com.apicela.apicrypto.repositories.MonitoringRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +64,15 @@ public class MonitoringService {
                     "O preço da moeda " + coin.name() + " alcançou seu preço de alerta!";
             return new Mail(userToBeNotified.mail(), title, msg);
         } else return null;
+    }
+
+    public Object update(long id, UpdateMonitoringDTO updateMonitoringDTO) {
+        try{
+            Monitoring m = new Monitoring(updateMonitoringDTO);
+            m.setId(id);
+            return "Monitoring with id " + id + " updated";
+        } catch (Exception e) {
+            throw new UpdateException("Failed to save monitoring data", e);
+        }
     }
 }

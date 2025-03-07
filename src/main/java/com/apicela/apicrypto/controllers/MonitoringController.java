@@ -1,6 +1,7 @@
 package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
+import com.apicela.apicrypto.models.dtos.UpdateMonitoringDTO;
 import com.apicela.apicrypto.services.MonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,5 +58,18 @@ public class MonitoringController {
     public Mono<ResponseEntity<Object>> deleteMonitoring(@PathVariable(value = "id") long id) {
         monitoringService.deleteById(id);
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body("Monitoring " + id + " deleted with successful!"));
+    }
+
+    @Operation(summary = "Update a monitoring record by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Monitoring record updated",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Monitoring record not updated",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Object>> getMonitoring(@PathVariable(value = "id") long id,
+    @RequestBody @Valid UpdateMonitoringDTO updateMonitoringDTO) {
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(monitoringService.update(id, updateMonitoringDTO)));
     }
 }
