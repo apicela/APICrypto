@@ -29,7 +29,7 @@ public class MailService {
     public void sendMultipleMails(List<Mail> mails) {
         var message = new SimpleMailMessage();
         message.setFrom("trab.jamilsouza@gmail.com");
-        for(Mail mail : mails) {
+        for (Mail mail : mails) {
             message.setTo(mail.to());
             message.setSubject(mail.title());
             javaMailSender.send(message);

@@ -24,7 +24,8 @@ public class User {
         this.password = null;
     }
 
-    public User() {}
+    public User() {
+    }
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;

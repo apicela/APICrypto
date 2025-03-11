@@ -1,5 +1,6 @@
-package com.apicela.apicrypto.models.dtos;
+package com.apicela.apicrypto.models.responses;
 
+import com.apicela.apicrypto.models.dtos.Coin;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -7,5 +8,5 @@ import java.util.List;
 
 public record CoinListResponseDTO(List<Coin> coins,
                                   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-                           LocalDateTime lastUpdated) {
+                                  LocalDateTime lastUpdated) {
 }

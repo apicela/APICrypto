@@ -1,7 +1,7 @@
 package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.Coin;
-import com.apicela.apicrypto.models.dtos.CoinListResponseDTO;
+import com.apicela.apicrypto.models.responses.CoinListResponseDTO;
 import com.apicela.apicrypto.services.CoinService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

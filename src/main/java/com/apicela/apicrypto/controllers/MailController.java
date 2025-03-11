@@ -24,7 +24,7 @@ public class MailController {
 
     @PostMapping
     @Operation(summary = "Send a mail")
-    public Mono<ResponseEntity<Object>> sendMail (@RequestBody Mail mail) {
+    public Mono<ResponseEntity<Object>> sendMail(@RequestBody Mail mail) {
         mailService.sendMail(mail);
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body("E-mail enviado"));
     }

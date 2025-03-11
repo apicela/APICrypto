@@ -25,13 +25,14 @@ public class Monitoring {
         this.greatherThan = monitoringDTO.greatherThan();
     }
 
-    public Monitoring(UpdateMonitoringDTO updateMonitoringDTO){
+    public Monitoring(UpdateMonitoringDTO updateMonitoringDTO) {
         this.price = updateMonitoringDTO.price();
         this.greatherThan = updateMonitoringDTO.greatherThan();
         this.coinId = updateMonitoringDTO.coinId();
     }
 
-    public Monitoring() {}
+    public Monitoring() {
+    }
 
     public long getId() {
         return id;

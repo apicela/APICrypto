@@ -13,7 +13,6 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -68,6 +67,7 @@ public class GlobalExceptionHandler {
         return Mono.just(response);
     }
 
-    public record ErrorResponse(String campo, String mensagem) { }
+    public record ErrorResponse(String campo, String mensagem) {
+    }
 
 }

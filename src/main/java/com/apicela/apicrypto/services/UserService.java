@@ -6,6 +6,7 @@ import com.apicela.apicrypto.models.dtos.UserDTO;
 import com.apicela.apicrypto.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
@@ -13,36 +14,36 @@ import java.util.UUID;
 public class UserService {
     UserRepository userRepository;
 
-    public UserService (UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public UserDTO save (UserDTO monitoringDTO){
-        var user = new User(monitoringDTO);
-        try{
-            User savedUser = userRepository.save(user);
-            return new UserDTO(savedUser.getName(), savedUser.getLastName(), savedUser.getMail());
-        } catch (Exception e) {
-            throw new SaveException("Failed to save user data", e);
-        }
+    public Mono<UserDTO> save(UserDTO userDTO) {
+        var user = new User(userDTO);
+        return userRepository.save(user)
+                .map(savedUser -> new UserDTO(savedUser.getName(), savedUser.getLastName(), savedUser.getMail()))
+                .onErrorMap(e -> new SaveException("Failed to save user data", e));
     }
 
-    public UserDTO findById (UUID id){
+    public Mono<UserDTO> findById(UUID id) {
         return userRepository.findById(id)
                 .map(user -> new UserDTO(
                         user.getName(),
                         user.getLastName(),
                         user.getMail()
                 ))
-                .orElseThrow(() -> new EntityNotFoundException("Record not found with ID: " + id));
+                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)));
     }
 
-    public void deleteById(UUID id) {
-        var monitoring = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Record not found with ID: " + id));
-
-        monitoring.setDeleted(true);
-        userRepository.save(monitoring);
+    public Mono<Void> deleteById(UUID id) {
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)))
+                .flatMap(user -> {
+                    user.setDeleted(true);
+                    return userRepository.save(user);
+                })
+                .then();  // Converte o Mono<User> para Mono<Void>, pois o retorno da operação não precisa do valor
     }
+
 
 }

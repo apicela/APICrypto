@@ -69,7 +69,7 @@ public class MonitoringController {
     })
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Object>> getMonitoring(@PathVariable(value = "id") long id,
-    @RequestBody @Valid UpdateMonitoringDTO updateMonitoringDTO) {
+                                                      @RequestBody @Valid UpdateMonitoringDTO updateMonitoringDTO) {
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body(monitoringService.update(id, updateMonitoringDTO)));
     }
 }

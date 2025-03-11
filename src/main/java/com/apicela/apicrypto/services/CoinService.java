@@ -62,8 +62,9 @@ public class CoinService {
         if (!monitoredItemsList.isEmpty()) {
             for (Long id : monitoredItemsList) {
                 var monitoredItem = monitoringService.findById(id);
-                Mail notify = monitoringService.verifyConditionsToSendMail(monitoredItem, coin);
-                if(notify != null) usersToSendMail.add(notify);
+                monitoringService.verifyConditionsToSendMail(monitoredItem, coin)
+                        .subscribe(mail ->
+                                usersToSendMail.add(mail));
             }
         }
         mailService.sendMultipleMails(usersToSendMail);

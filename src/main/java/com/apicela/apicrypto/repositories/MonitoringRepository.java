@@ -2,15 +2,15 @@ package com.apicela.apicrypto.repositories;
 
 import com.apicela.apicrypto.models.Monitoring;
 import io.lettuce.core.dynamic.annotation.Param;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MonitoringRepository extends JpaRepository<Monitoring, Long> {
+public interface MonitoringRepository extends ReactiveCrudRepository<Monitoring, Long> {
     @Query("SELECT m FROM Monitoring m WHERE m.id = :id AND m.isDeleted = false")
     Optional<Monitoring> findByIdAndNotDeleted(@Param("id") Long id);
 

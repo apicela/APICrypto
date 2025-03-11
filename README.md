@@ -6,6 +6,7 @@
 Salva um novo registro de monitoramento.
 
 **Requisição:**
+
 ```json
 {
   "userId": "550e8400-e29b-41d4-a716-446655440000",
@@ -16,6 +17,7 @@ Salva um novo registro de monitoramento.
 ```
 
 **Respostas:**
+
 - **201 Created**: Registro de monitoramento criado com sucesso.
   ```json
   {
@@ -46,6 +48,7 @@ Salva um novo registro de monitoramento.
 Obtém um registro de monitoramento pelo ID informado.
 
 **Respostas:**
+
 - **200 OK**: Registro encontrado.
   ```json
   {
@@ -79,6 +82,7 @@ Obtém um registro de monitoramento pelo ID informado.
 Remove um registro de monitoramento pelo ID informado.
 
 **Respostas:**
+
 - **200 OK**: Registro deletado com sucesso.
   ```json
   {
@@ -93,8 +97,6 @@ Remove um registro de monitoramento pelo ID informado.
   }
   ```
 
-
-
 ### Obter todas as moedas
 
 **Rota:** `GET /coins`
@@ -103,6 +105,7 @@ Remove um registro de monitoramento pelo ID informado.
 Retorna a lista de todas as moedas disponíveis no sistema, juntamente com a data e hora da última atualização.
 
 **Respostas:**
+
 - **200 OK**: Lista de moedas retornada com sucesso.
   ```json
   {
@@ -157,6 +160,7 @@ Retorna a lista de todas as moedas disponíveis no sistema, juntamente com a dat
 Retorna os detalhes de uma moeda específica pelo seu identificador.
 
 **Respostas:**
+
 - **200 OK**: Moeda encontrada com sucesso.
   ```json
   {
@@ -202,8 +206,6 @@ Retorna os detalhes de uma moeda específica pelo seu identificador.
   }
   ```
 
-
-
 ### Enviar um e-mail
 
 **Rota:** `POST /mail`
@@ -212,6 +214,7 @@ Retorna os detalhes de uma moeda específica pelo seu identificador.
 Envia um e-mail para o destinatário informado.
 
 **Requisição:**
+
 ```json
 {
   "to": "usuario@example.com",
@@ -221,6 +224,7 @@ Envia um e-mail para o destinatário informado.
 ```
 
 **Respostas:**
+
 - **200 OK**: E-mail enviado com sucesso.
   ```json
   {
@@ -235,10 +239,6 @@ Envia um e-mail para o destinatário informado.
   }
   ```
 
-
-
-
-
 ### Criar um novo usuário
 
 **Rota:** `POST /user`
@@ -247,6 +247,7 @@ Envia um e-mail para o destinatário informado.
 Cria um novo usuário no sistema.
 
 **Requisição:**
+
 ```json
 {
   "name": "João",
@@ -256,6 +257,7 @@ Cria um novo usuário no sistema.
 ```
 
 **Respostas:**
+
 - **201 Created**: Usuário criado com sucesso.
   ```json
   {
@@ -286,6 +288,7 @@ Cria um novo usuário no sistema.
 Busca um usuário específico pelo seu identificador único (UUID).
 
 **Respostas:**
+
 - **200 OK**: Usuário encontrado com sucesso.
   ```json
   {
@@ -319,6 +322,7 @@ Busca um usuário específico pelo seu identificador único (UUID).
 Deleta um usuário específico pelo seu identificador único (UUID).
 
 **Respostas:**
+
 - **200 OK**: Usuário deletado com sucesso.
   ```json
   {
