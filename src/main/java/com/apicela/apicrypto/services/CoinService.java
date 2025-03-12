@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,10 +62,14 @@ public class CoinService {
         List<Mail> usersToSendMail = new ArrayList<>();
         if (!monitoredItemsList.isEmpty()) {
             for (Long id : monitoredItemsList) {
-                var monitoredItem = monitoringService.findById(id);
-                monitoringService.verifyConditionsToSendMail(monitoredItem, coin)
-                        .subscribe(mail ->
-                                usersToSendMail.add(mail));
+                monitoringService.findById(id)
+                        .publishOn(Schedulers.boundedElastic())
+                        .flatMap(it -> monitoringService.verifyConditionsToSendMail(it, coin)) // Chama a verificação das condições para envio de e-mail
+                        .subscribe(mail -> {
+                            if (mail != null) {
+                                usersToSendMail.add(mail);
+                            }
+                        });
             }
         }
         mailService.sendMultipleMails(usersToSendMail);
