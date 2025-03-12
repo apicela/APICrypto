@@ -2,6 +2,7 @@ package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.apicela.apicrypto.models.dtos.UpdateMonitoringDTO;
+import com.apicela.apicrypto.models.responses.DefaultApiResponse;
 import com.apicela.apicrypto.services.MonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,9 +38,16 @@ public class MonitoringController {
     })
     @PostMapping
     public Mono<ResponseEntity<Object>> saveMonitoring(@RequestBody @Valid MonitoringDTO monitoringDTO) {
-        log.info("{}", monitoringDTO);
-        System.out.println(monitoringDTO);
-        return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(monitoringService.save(monitoringDTO)));
+        return monitoringService.save(monitoringDTO)
+                .map( it -> {
+                    DefaultApiResponse<MonitoringDTO> response = new DefaultApiResponse<>(
+                            "Monitoring record created successfully",
+                            it,
+                            HttpStatus.CREATED.value()
+                    );
+                    log.info("{}", response);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                });
     }
 
     @Operation(summary = "Get a monitoring record by ID")
@@ -51,13 +59,27 @@ public class MonitoringController {
     })
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Object>> getMonitoring(@PathVariable(value = "id") long id) {
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(monitoringService.findById(id)));
+        return monitoringService.findById(id).map(it -> {
+            DefaultApiResponse<MonitoringDTO> response = new DefaultApiResponse<>(
+                    "ok",
+                    it,
+                    HttpStatus.OK.value()
+            );
+            log.info("{}", response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        });
     }
 
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Object>> deleteMonitoring(@PathVariable(value = "id") long id) {
-        monitoringService.deleteById(id);
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body("Monitoring " + id + " deleted with successful!"));
+        return monitoringService.deleteById(id).then(Mono.fromCallable(() -> {
+            DefaultApiResponse<Void> response = new DefaultApiResponse<>(
+                    "ok",
+                    HttpStatus.OK.value()
+            );
+            log.info("Monitoring with ID {} deleted successfully", id);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }));
     }
 
     @Operation(summary = "Update a monitoring record by ID")
@@ -70,6 +92,13 @@ public class MonitoringController {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Object>> getMonitoring(@PathVariable(value = "id") long id,
                                                       @RequestBody @Valid UpdateMonitoringDTO updateMonitoringDTO) {
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(monitoringService.update(id, updateMonitoringDTO)));
+        return monitoringService.update(id, updateMonitoringDTO).map( it -> {
+                    DefaultApiResponse<Void> response = new DefaultApiResponse<>(
+                            "ok",
+                            HttpStatus.OK.value()
+                    );
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                });
+
     }
 }

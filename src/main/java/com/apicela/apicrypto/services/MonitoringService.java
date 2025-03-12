@@ -46,14 +46,14 @@ public class MonitoringService {
     }
 
     @Cacheable(value = "cache512size", key = "#id")
-    public MonitoringDTO findById(long id) {
+    public Mono<MonitoringDTO> findById(long id) {
         return monitoringRepository.findByIdAndNotDeleted(id)
                 .map(monitoring -> new MonitoringDTO(
                         monitoring.getUserId(),
                         monitoring.getCoinId(),
                         monitoring.getPrice(),
                         monitoring.isGreatherThan()))
-                .orElseThrow(() -> new EntityNotFoundException("Record not found with ID:  " + id));
+                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)));
     }
 
     public List<Long> getMonitoringIdsForCoin(String coinId) {
@@ -76,13 +76,13 @@ public class MonitoringService {
         }
     }
 
-    public Object update(long id, UpdateMonitoringDTO updateMonitoringDTO) {
-        try {
-            Monitoring m = new Monitoring(updateMonitoringDTO);
-            m.setId(id);
-            return "Monitoring with id " + id + " updated";
-        } catch (Exception e) {
-            throw new UpdateException("Failed to save monitoring data", e);
-        }
-    }
+    public Mono<Void> update(long id, UpdateMonitoringDTO updateMonitoringDTO) {
+        return monitoringRepository.findById(id)
+                .switchIfEmpty(Mono.error(new EntityNotFoundException("Monitoring with ID " + id + " not found")))
+                .flatMap(existing -> {
+                    Monitoring m = new Monitoring(updateMonitoringDTO);
+                    m.setId(id);
+                    return monitoringRepository.save(m).then();
+                })
+                .onErrorMap(e -> new UpdateException("Failed to update monitoring data", e));    }
 }

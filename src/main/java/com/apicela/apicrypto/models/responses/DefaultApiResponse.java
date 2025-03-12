@@ -1,17 +1,17 @@
 package com.apicela.apicrypto.models.responses;
 
-public class ApiResponse<T> {
+public class DefaultApiResponse<T> {
     private String message;
     private T data;
     private int statusCode;
 
-    public ApiResponse(String message, T data, int statusCode) {
+    public DefaultApiResponse(String message, T data, int statusCode) {
         this.message = message;
         this.data = data;
         this.statusCode = statusCode;
     }
 
-    public ApiResponse(String message, int statusCode) {
+    public DefaultApiResponse(String message, int statusCode) {
         this(message, null, statusCode);
     }
 

@@ -1,11 +1,12 @@
 package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.UserDTO;
-import com.apicela.apicrypto.models.responses.ApiResponse;
+import com.apicela.apicrypto.models.responses.DefaultApiResponse;
 import com.apicela.apicrypto.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
+@Log4j2
 @Tag(name = "User Controller")
 public class UserController {
     private final UserService userService;
@@ -28,11 +30,12 @@ public class UserController {
     public Mono<ResponseEntity<Object>> saveUser(@RequestBody @Valid UserDTO userDTO) {
         return userService.save(userDTO)
                 .map(savedUser -> {
-                    ApiResponse<UserDTO> response = new ApiResponse<>(
-                            "Usuário criado com sucesso",
+                    DefaultApiResponse<UserDTO> response = new DefaultApiResponse<>(
+                            "User created successfully",
                             savedUser,
                             HttpStatus.CREATED.value()
                     );
+                    log.info("{}", response);
                     return ResponseEntity.status(HttpStatus.CREATED).body(response);
                 });
     }
@@ -41,11 +44,12 @@ public class UserController {
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
     public Mono<ResponseEntity<Object>> getUserById(@PathVariable(value = "id") UUID id) {
         return userService.findById(id).map(user -> {
-            ApiResponse<UserDTO> response = new ApiResponse<>(
+            DefaultApiResponse<UserDTO> response = new DefaultApiResponse<>(
                     "ok",
                     user,
                     HttpStatus.OK.value()
             );
+            log.info("{}", response);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         });
     }
@@ -54,10 +58,11 @@ public class UserController {
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
     public Mono<ResponseEntity<Object>> deleteMonitoring(@PathVariable(value = "id") UUID id) {
         return userService.deleteById(id).then(Mono.fromCallable(() -> {
-            ApiResponse<Void> response = new ApiResponse<>(
+            DefaultApiResponse<Void> response = new DefaultApiResponse<>(
                     "ok",
                     HttpStatus.OK.value()
             );
+            log.info("User with ID {} deleted successfully", id);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }));
 

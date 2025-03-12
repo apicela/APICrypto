@@ -5,14 +5,14 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MonitoringRepository extends ReactiveCrudRepository<Monitoring, Long> {
     @Query("SELECT m FROM Monitoring m WHERE m.id = :id AND m.isDeleted = false")
-    Optional<Monitoring> findByIdAndNotDeleted(@Param("id") Long id);
+    Mono<Monitoring> findByIdAndNotDeleted(@Param("id") Long id);
 
     @Query("SELECT m.id FROM Monitoring m WHERE m.isDeleted = false")
     List<Long> findAllIds();
