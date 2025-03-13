@@ -414,38 +414,3 @@ Retorna os detalhes de uma moeda específica pelo seu identificador.
   }
   ```
 
-### Enviar um e-mail
-
-**Rota:** `POST /mail`
-
-**Descrição:**
-Envia um e-mail para o destinatário informado.
-
-**Requisição:**
-
-```json
-{
-  "to": "usuario@example.com",
-  "title": "Assunto do e-mail",
-  "message": "Conteúdo da mensagem"
-}
-```
-
-**Respostas:**
-
-- **200 OK**: E-mail enviado com sucesso.
-  ```json
-  {
-    "message": "E-mail enviado"
-  }
-  ```
-- **500 Internal Server Error**: Erro interno do servidor.
-  ```json
-  {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
-  }
-  ```
-
-
-
