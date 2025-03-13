@@ -1,3 +1,135 @@
+### Criar um novo usuário
+
+**Rota:** `POST /user`
+
+**Descrição:**
+Cria um novo usuário no sistema.
+
+**Requisição:**
+
+```json
+{
+  "name": "Jamil",
+  "lastName": "Apicela",
+  "mail": "jamil@apicela.com"
+}
+```
+
+**Respostas:**
+
+- **201 Created**: Usuário criado com sucesso.
+```json
+{
+    "message": "User created successfully",
+    "data": {
+        "name": "Jamil",
+        "lastName": "Apicela",
+        "mail": "jamil@apicela.com"
+    },
+    "status": 201
+}
+```
+- **400 Bad Request**: Erro de validação.
+```json
+{
+    "message": "Validation Error",
+    "errors": {
+        "lastName": "Last name cannot be empty",
+        "name": "Name cannot be empty"
+    },
+    "status": 400
+}
+```
+- **409 Conflict**: Conflito ao salvar dados no servidor.
+```json
+{
+    "message": "E-mail already in use",
+    "data": null,
+    "status": 409
+}
+```
+- **500 Internal Server Error**: Erro interno do servidor.
+ ```json
+  {
+    "message": "Erro interno",
+    "error": "Detalhes do erro"
+  }
+```
+
+---
+
+### Obter usuário por ID
+
+**Rota:** `GET /user?id={id}`
+
+**Descrição:**
+Busca um usuário específico pelo seu identificador único (UUID).
+
+**Respostas:**
+
+- **200 OK**: Usuário encontrado com sucesso.
+  ```json
+  {
+      "message": "ok",
+      "data": {
+          "name": "Jamil",
+          "lastName": "Apicela",
+          "mail": "jamil@apicela.com"
+      },
+      "status": 200
+  }
+  ```
+- **404 Not Found**: Usuário não encontrado.
+  ```json
+  {
+      "message": "Record not found with ID: e98a4fa8-1ad7-4e7c-87a9-21808c668451",
+      "data": null,
+      "status": 404
+  }
+  ```
+- **500 Internal Server Error**: Erro interno do servidor.
+  ```json
+    {
+      "message": "Erro interno",
+      "error": "Detalhes do erro"
+    }
+  ```
+
+---
+
+### Deletar usuário por ID
+
+**Rota:** `DELETE /user?id={id}`
+
+**Descrição:**
+Deleta um usuário específico pelo seu identificador único (UUID).
+
+**Respostas:**
+
+- **200 OK**: Usuário deletado com sucesso.
+  ```json
+  {
+      "message": "ok",
+      "data": null,
+      "status": 200
+  }
+  ```
+- **404 Not Found**: Usuário não encontrado.
+  ```json
+  {
+      "message": "Record not found with ID: e98a4fa8-1ad7-4e7c-87a9-21808c668451",
+      "data": null,
+      "status": 404
+  }
+  ```
+- **500 Internal Server Error**: Erro interno do servidor.
+  ```json
+    {
+      "message": "Erro interno",
+      "error": "Detalhes do erro"
+    }
+  ```
+  
 ### Criar um novo monitoramento
 
 **Rota:** `POST /monitoring`
@@ -239,107 +371,5 @@ Envia um e-mail para o destinatário informado.
   }
   ```
 
-### Criar um novo usuário
 
-**Rota:** `POST /user`
-
-**Descrição:**
-Cria um novo usuário no sistema.
-
-**Requisição:**
-
-```json
-{
-  "name": "João",
-  "lastName": "Silva",
-  "mail": "joao.silva@example.com"
-}
-```
-
-**Respostas:**
-
-- **201 Created**: Usuário criado com sucesso.
-  ```json
-  {
-    "message": "Usuário criado com sucesso"
-  }
-  ```
-- **400 Bad Request**: Erro de validação.
-  ```json
-  {
-    "message": "Erro na solicitação"
-  }
-  ```
-- **500 Internal Server Error**: Erro interno do servidor.
-  ```json
-  {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
-  }
-  ```
-
----
-
-### Obter usuário por ID
-
-**Rota:** `GET /user/{id}`
-
-**Descrição:**
-Busca um usuário específico pelo seu identificador único (UUID).
-
-**Respostas:**
-
-- **200 OK**: Usuário encontrado com sucesso.
-  ```json
-  {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "João",
-    "lastName": "Silva",
-    "mail": "joao.silva@example.com"
-  }
-  ```
-- **404 Not Found**: Usuário não encontrado.
-  ```json
-  {
-    "message": "Usuário não encontrado"
-  }
-  ```
-- **500 Internal Server Error**: Erro interno do servidor.
-  ```json
-  {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
-  }
-  ```
-
----
-
-### Deletar usuário por ID
-
-**Rota:** `DELETE /user/{id}`
-
-**Descrição:**
-Deleta um usuário específico pelo seu identificador único (UUID).
-
-**Respostas:**
-
-- **200 OK**: Usuário deletado com sucesso.
-  ```json
-  {
-    "message": "User 550e8400-e29b-41d4-a716-446655440000 deleted with successful!"
-  }
-  ```
-- **404 Not Found**: Usuário não encontrado.
-  ```json
-  {
-    "message": "Usuário não encontrado"
-  }
-  ```
-- **500 Internal Server Error**: Erro interno do servidor.
-  ```json
-  {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
-  }
-  ```
 
