@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.exceptions;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.apicela.apicrypto.models.responses.DefaultApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +22,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SaveException.class)
     public Mono<ResponseEntity<Object>> handleSaveException(SaveException ex) {
         log.error("handleSaveException {}", ex);
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(ex.getMessage()));
+        var response = new DefaultApiResponse<>(ex.getMessage(), 400);
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response));
+    }
+
+    @ExceptionHandler(UpdateException.class)
+    public Mono<ResponseEntity<Object>> handleUpdateException(UpdateException ex) {
+        log.error("handleUpdateException {}", ex);
+        var response = new DefaultApiResponse<>(ex.getMessage(), 400);
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response));
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public Mono<ResponseEntity<Object>> handleUpdateException(EmailAlreadyInUseException ex) {
+        log.error("handleEmailAlreadyInUseException {}", ex);
+        var response = new DefaultApiResponse<>(ex.getMessage(), 409);
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(response));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public Mono<ResponseEntity<Object>> handleEntityNotFound(EntityNotFoundException ex) {
         log.error("handleEntityNotFound {}", ex);
-        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()));
+        var response = new DefaultApiResponse<>(ex.getMessage(), 404);
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(response));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> response = new HashMap<>();
-        response.put("error", "Validation Error");
+        response.put("message", "Validation Error");
         response.put("status", HttpStatus.BAD_REQUEST.value());
 
         Map<String, String> errors = new HashMap<>();
@@ -52,7 +68,7 @@ public class GlobalExceptionHandler {
     public Mono<Map<String, Object>> handleValidationException(WebExchangeBindException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.BAD_REQUEST.value());
-        response.put("error", "Validation Error");
+        response.put("message", "Validation Error");
 
         // Extrai os erros do DTO e coloca em um mapa de campo -> mensagem
         Map<String, String> errors = ex.getFieldErrors().stream()

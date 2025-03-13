@@ -20,15 +20,15 @@ public class CoinController {
     @Autowired
     CoinService coinService;
 
-    @GetMapping()
+    @GetMapping("/all")
     public Mono<CoinListResponseDTO> getAllCoins() {
         return coinService.listAllCoins()
                 .collectList()
-                .map(coins -> new CoinListResponseDTO(coins, LocalDateTime.now()));
+                .map(coins -> new CoinListResponseDTO(coins, LocalDateTime.now(), "ok"));
     }
 
-    @GetMapping("/{id}")
-    public Mono<ResponseEntity<Coin>> getCoinById(@PathVariable(value = "id") String name) {
+    @GetMapping()
+    public Mono<ResponseEntity<Coin>> getCoinById(@RequestParam(value = "name") String name) {
         return coinService.findById(name)
                 .map(coin -> ResponseEntity.status(HttpStatus.OK).body(coin));
     }

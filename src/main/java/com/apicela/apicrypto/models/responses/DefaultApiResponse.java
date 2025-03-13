@@ -3,12 +3,12 @@ package com.apicela.apicrypto.models.responses;
 public class DefaultApiResponse<T> {
     private String message;
     private T data;
-    private int statusCode;
+    private int status;
 
     public DefaultApiResponse(String message, T data, int statusCode) {
         this.message = message;
         this.data = data;
-        this.statusCode = statusCode;
+        this.status = statusCode;
     }
 
     public DefaultApiResponse(String message, int statusCode) {
@@ -32,11 +32,11 @@ public class DefaultApiResponse<T> {
         this.data = data;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getStatus() {
+        return status;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

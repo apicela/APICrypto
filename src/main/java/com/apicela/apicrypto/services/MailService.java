@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class MailService {
         javaMailSender.send(message);
     }
 
-    public void sendMultipleMails(List<Mail> mails) {
+    public Mono<Void> sendMultipleMails(List<Mail> mails) {
         var message = new SimpleMailMessage();
         message.setFrom("trab.jamilsouza@gmail.com");
         for (Mail mail : mails) {
@@ -35,5 +36,6 @@ public class MailService {
             javaMailSender.send(message);
             log.info("Email enviado:  {}", mail);
         }
+        return Mono.empty();
     }
 }

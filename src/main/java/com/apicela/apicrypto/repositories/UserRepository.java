@@ -1,18 +1,20 @@
 package com.apicela.apicrypto.repositories;
 
-import com.apicela.apicrypto.models.Monitoring;
 import com.apicela.apicrypto.models.User;
 import io.lettuce.core.dynamic.annotation.Param;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface UserRepository extends ReactiveCrudRepository<User, UUID> {
-    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isDeleted = false")
-    Optional<Monitoring> findByIdAndNotDeleted(@Param("id") Long id);
+    @Query("SELECT * FROM users WHERE id = :id AND is_deleted = false")
+    Mono<User> findByIdAndNotDeleted(@Param("id") UUID id);
+
+    @Query("SELECT * FROM users WHERE mail = :mail AND is_deleted = false")
+    Mono<User> findByMail(@Param("mail") String mail);
 
 }

@@ -1,15 +1,14 @@
 package com.apicela.apicrypto.models;
 
 import com.apicela.apicrypto.models.dtos.UserDTO;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Entity
-@Table(name = "users")
+@Table("users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private String lastName;
@@ -21,14 +20,14 @@ public class User {
         this.name = userDTO.name();
         this.lastName = userDTO.lastName();
         this.mail = userDTO.mail();
-        this.password = null;
+        this.password = "123";
     }
 
     public User() {
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.isDeleted = deleted;
     }
 
     public String getName() {
@@ -69,5 +68,15 @@ public class User {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mail='" + mail + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

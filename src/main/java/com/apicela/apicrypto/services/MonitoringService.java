@@ -1,5 +1,6 @@
 package com.apicela.apicrypto.services;
 
+import com.apicela.apicrypto.exceptions.EntityNotFoundException;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.exceptions.UpdateException;
 import com.apicela.apicrypto.models.Monitoring;
@@ -8,14 +9,16 @@ import com.apicela.apicrypto.models.dtos.Mail;
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.apicela.apicrypto.models.dtos.UpdateMonitoringDTO;
 import com.apicela.apicrypto.repositories.MonitoringRepository;
-import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @Service
+@Log4j2
 public class MonitoringService {
     MonitoringRepository monitoringRepository;
     UserService userService;
@@ -27,13 +30,14 @@ public class MonitoringService {
     public Mono<MonitoringDTO> save(MonitoringDTO monitoringDTO) {
         var monitoring = new Monitoring(monitoringDTO);
         return monitoringRepository.save(monitoring)
+                .doOnNext(savedMonitoring -> log.info("Monitoring saved {}", savedMonitoring))
                 .map(monitoring1 -> new MonitoringDTO(
                         monitoring1.getUserId(),
                         monitoring1.getCoinId(),
                         monitoring1.getPrice(),
                         monitoring1.isGreatherThan()
                 ))
-                .onErrorMap(e -> new SaveException("Failed to save user data", e));
+                .onErrorMap(e -> new SaveException("Failed to save monitoring data", e));
     }
 
     public Mono<Void> deleteById(Long id) {
@@ -56,7 +60,7 @@ public class MonitoringService {
                 .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)));
     }
 
-    public List<Long> getMonitoringIdsForCoin(String coinId) {
+    public Flux<List<Long>> getMonitoringIdsForCoin(String coinId) {
         return monitoringRepository.findAllByCoinId(coinId);
     }
 
@@ -84,5 +88,6 @@ public class MonitoringService {
                     m.setId(id);
                     return monitoringRepository.save(m).then();
                 })
-                .onErrorMap(e -> new UpdateException("Failed to update monitoring data", e));    }
+                .onErrorMap(e -> new UpdateException("Failed to update monitoring data", e));
+    }
 }

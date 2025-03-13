@@ -2,15 +2,14 @@ package com.apicela.apicrypto.models;
 
 import com.apicela.apicrypto.models.dtos.MonitoringDTO;
 import com.apicela.apicrypto.models.dtos.UpdateMonitoringDTO;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Entity
-@Table(name = "monitorings")
+@Table("monitorings")
 public class Monitoring {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     UUID userId;
     String coinId;
@@ -76,5 +75,16 @@ public class Monitoring {
 
     public void setGreatherThan(boolean greatherThan) {
         this.greatherThan = greatherThan;
+    }
+
+    @Override
+    public String toString() {
+        return "Monitoring{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", coinId='" + coinId + '\'' +
+                ", price=" + price +
+                ", greatherThan=" + greatherThan +
+                '}';
     }
 }

@@ -1,7 +1,7 @@
 package com.apicela.apicrypto.services;
 
 import com.apicela.apicrypto.models.dtos.Coin;
-import com.apicela.apicrypto.models.dtos.Mail;
+import com.apicela.apicrypto.utils.CoinApiParams;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,8 +16,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Log4j2
@@ -25,6 +23,7 @@ public class CoinService {
     private final WebClient webClient;
     private final MonitoringService monitoringService;
     private final MailService mailService;
+    private final CoinApiParams coinApiParams = new CoinApiParams();
 
     public CoinService(ObjectMapper objectMapper, MonitoringService monitoringService, MailService mailService) {
         // Configura o WebClient para usar o ObjectMapper personalizado
@@ -48,31 +47,23 @@ public class CoinService {
     @Scheduled(cron = "0 */15 8-23 * * *")
     public Flux<Coin> listAllCoins() {
         String COINS_ENDPOINT = "/coins/markets";
-        String PARAMS = "?vs_currency=brl&price_change_percentage=1h,24h,7d,14d,30d,200d,1y&localization=false&developer_data=false";
         log.info("Valores das criptomoedas atualizadas na cache. {}", LocalDateTime.now());
         return webClient.get()
-                .uri(COINS_ENDPOINT + PARAMS)
+                .uri(coinApiParams.toUrl(COINS_ENDPOINT))
                 .retrieve()
                 .bodyToFlux(Coin.class)
                 .doOnNext(this::checkAndNotify);
     }
 
-    private void checkAndNotify(Coin coin) {
-        var monitoredItemsList = monitoringService.getMonitoringIdsForCoin(coin.id());
-        List<Mail> usersToSendMail = new ArrayList<>();
-        if (!monitoredItemsList.isEmpty()) {
-            for (Long id : monitoredItemsList) {
-                monitoringService.findById(id)
+    private Mono<Void> checkAndNotify(Coin coin) {
+        return monitoringService.getMonitoringIdsForCoin(coin.id())
+                .flatMapIterable(monitoredItemsList -> monitoredItemsList)
+                .flatMap(id -> monitoringService.findById(id)
                         .publishOn(Schedulers.boundedElastic())
-                        .flatMap(it -> monitoringService.verifyConditionsToSendMail(it, coin)) // Chama a verificação das condições para envio de e-mail
-                        .subscribe(mail -> {
-                            if (mail != null) {
-                                usersToSendMail.add(mail);
-                            }
-                        });
-            }
-        }
-        mailService.sendMultipleMails(usersToSendMail);
+                        .flatMap(it -> monitoringService.verifyConditionsToSendMail(it, coin))
+                        .filter(mail -> mail != null))
+                .collectList()
+                .flatMap(mails -> mailService.sendMultipleMails(mails).then());
     }
 
     @Cacheable(value = "cache1Min", key = "#name", sync = true)
@@ -80,8 +71,9 @@ public class CoinService {
         String ENDPOINT = "/coins/" + name;
         log.info("Valor da criptomoeda {} atualizada na cache. {}", name, LocalDateTime.now());
         return webClient.get()
-                .uri(ENDPOINT)
+                .uri(coinApiParams.toUrl(ENDPOINT))
                 .retrieve()
-                .bodyToMono(Coin.class);
+                .bodyToMono(Coin.class)
+                .doOnNext(this::checkAndNotify);
     }
 }

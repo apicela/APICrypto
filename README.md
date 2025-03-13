@@ -18,6 +18,7 @@ Cria um novo usuário no sistema.
 **Respostas:**
 
 - **201 Created**: Usuário criado com sucesso.
+
 ```json
 {
     "message": "User created successfully",
@@ -29,7 +30,9 @@ Cria um novo usuário no sistema.
     "status": 201
 }
 ```
+
 - **400 Bad Request**: Erro de validação.
+
 ```json
 {
     "message": "Validation Error",
@@ -40,7 +43,9 @@ Cria um novo usuário no sistema.
     "status": 400
 }
 ```
+
 - **409 Conflict**: Conflito ao salvar dados no servidor.
+
 ```json
 {
     "message": "E-mail already in use",
@@ -48,7 +53,9 @@ Cria um novo usuário no sistema.
     "status": 409
 }
 ```
+
 - **500 Internal Server Error**: Erro interno do servidor.
+
  ```json
   {
     "message": "Erro interno",
@@ -129,7 +136,7 @@ Deleta um usuário específico pelo seu identificador único (UUID).
       "error": "Detalhes do erro"
     }
   ```
-  
+
 ### Criar um novo monitoramento
 
 **Rota:** `POST /monitoring`
