@@ -58,8 +58,9 @@ Cria um novo usuário no sistema.
 
  ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
 ```
 
@@ -96,10 +97,11 @@ Busca um usuário específico pelo seu identificador único (UUID).
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
-    {
-      "message": "Erro interno",
-      "error": "Detalhes do erro"
-    }
+  {
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
+  }
   ```
 
 ---
@@ -131,10 +133,11 @@ Deleta um usuário específico pelo seu identificador único (UUID).
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
-    {
-      "message": "Erro interno",
-      "error": "Detalhes do erro"
-    }
+  {
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
+  }
   ```
 
 ### Criar um novo monitoramento
@@ -172,8 +175,9 @@ Salva um novo registro de monitoramento.
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
   ```
 
@@ -206,8 +210,9 @@ Obtém um registro de monitoramento pelo ID informado.
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
   ```
 
@@ -231,8 +236,9 @@ Remove um registro de monitoramento pelo ID informado.
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
   ```
 
@@ -319,8 +325,9 @@ Retorna a lista de todas as moedas disponíveis no sistema, juntamente com a dat
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
   ```
 
@@ -400,17 +407,28 @@ Retorna os detalhes de uma moeda específica pelo seu identificador.
       "status": 200
   }
   ```
+  - **400 Bad Request**: Requisição inválida.
+  ```json
+  {
+      "message": "400 BAD_REQUEST \"Required query parameter 'name' is not present.\"",
+      "data": null,
+      "status": 400
+  }
+  ```
 - **404 Not Found**: Moeda não encontrada.
   ```json
   {
-    "message": "Moeda não encontrada"
+      "message": "A moeda btct não existe.",
+      "data": null,
+      "status": 404
   }
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
   ```json
   {
-    "message": "Erro interno",
-    "error": "Detalhes do erro"
+      "message": "Mensagem do erro",
+      "data": null,
+      "status": 500
   }
   ```
 
