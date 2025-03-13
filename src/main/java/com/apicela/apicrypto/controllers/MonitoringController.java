@@ -40,7 +40,7 @@ public class MonitoringController {
     public Mono<ResponseEntity<Object>> saveMonitoring(@RequestBody @Valid MonitoringDTO monitoringDTO) {
         return monitoringService.save(monitoringDTO)
                 .map(it -> {
-                    DefaultApiResponse<MonitoringDTO> response = new DefaultApiResponse<>(
+                    DefaultApiResponse<UpdateMonitoringDTO> response = new DefaultApiResponse<>(
                             "Monitoring record created successfully",
                             it,
                             HttpStatus.CREATED.value()
@@ -60,9 +60,9 @@ public class MonitoringController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Object>> getMonitoring(@PathVariable(value = "id") long id) {
         return monitoringService.findById(id).map(it -> {
-            DefaultApiResponse<MonitoringDTO> response = new DefaultApiResponse<>(
+            DefaultApiResponse<UpdateMonitoringDTO> response = new DefaultApiResponse<>(
                     "ok",
-                    it,
+                    new UpdateMonitoringDTO(it.coinId(), it.price(), it.greatherThan()),
                     HttpStatus.OK.value()
             );
             log.info("{}", response);

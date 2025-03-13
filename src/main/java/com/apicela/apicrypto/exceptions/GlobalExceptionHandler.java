@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.server.MissingRequestValueException;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -40,12 +41,13 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(response));
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public Mono<ResponseEntity<Object>> handleEntityNotFound(EntityNotFoundException ex) {
-        log.error("handleEntityNotFound {}", ex);
+    @ExceptionHandler(NotFoundException.class)
+    public Mono<ResponseEntity<Object>> handleNotFound(NotFoundException ex) {
+        log.error("handleNotFound {}", ex);
         var response = new DefaultApiResponse<>(ex.getMessage(), 404);
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(response));
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -83,7 +85,17 @@ public class GlobalExceptionHandler {
         return Mono.just(response);
     }
 
-    public record ErrorResponse(String campo, String mensagem) {
+    @ExceptionHandler(MissingRequestValueException.class)
+    public Mono<ResponseEntity<Object>> handleMissingRequestValueException(MissingRequestValueException ex) {
+        log.error("handleMissingRequestValueException {}", ex);
+        var response = new DefaultApiResponse<>(ex.getMessage(), 400);
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response));
     }
 
+    @ExceptionHandler(Exception.class)
+    public Mono<ResponseEntity<Object>> exception(Exception ex) {
+        log.error("handleException {}", ex);
+        var response = new DefaultApiResponse<>(ex.getMessage(), 500);
+        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response));
+    }
 }

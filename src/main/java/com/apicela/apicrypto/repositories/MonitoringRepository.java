@@ -8,16 +8,14 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Repository
 public interface MonitoringRepository extends ReactiveCrudRepository<Monitoring, Long> {
-    @Query("SELECT m FROM Monitoring m WHERE m.id = :id AND m.isDeleted = false")
+    @Query("SELECT * FROM monitorings  WHERE id = :id AND is_deleted = false")
     Mono<Monitoring> findByIdAndNotDeleted(@Param("id") Long id);
 
-    @Query("SELECT m.id FROM Monitoring m WHERE m.isDeleted = false")
-    Flux<List<Long>> findAllIds();
+    @Query("SELECT id FROM monitorings WHERE is_deleted = false")
+    Flux<Long> findAllIds();
 
-    @Query("SELECT m.id FROM Monitoring m WHERE m.isDeleted = false AND m.coinId = :coinId")
-    Flux<List<Long>> findAllByCoinId(String coinId);
+    @Query("SELECT id FROM monitorings WHERE is_deleted = false AND coin_id = :coinId")
+    Flux<Long> findAllByCoinId(String coinId);
 }

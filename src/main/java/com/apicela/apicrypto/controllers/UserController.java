@@ -40,9 +40,9 @@ public class UserController {
                 });
     }
 
-    @GetMapping()
+    @GetMapping("/{id}")
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
-    public Mono<ResponseEntity<Object>> getUserById(@RequestParam(value = "id") UUID id) {
+    public Mono<ResponseEntity<Object>> getUserById(@PathVariable(value = "id") UUID id) {
         return userService.findById(id).map(user -> {
             DefaultApiResponse<UserDTO> response = new DefaultApiResponse<>(
                     "ok",
@@ -54,9 +54,9 @@ public class UserController {
         });
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")
-    public Mono<ResponseEntity<Object>> deleteMonitoring(@RequestParam(value = "id") UUID id) {
+    public Mono<ResponseEntity<Object>> deleteMonitoring(@PathVariable(value = "id") UUID id) {
         return userService.deleteById(id).then(Mono.fromCallable(() -> {
             DefaultApiResponse<Void> response = new DefaultApiResponse<>(
                     "ok",

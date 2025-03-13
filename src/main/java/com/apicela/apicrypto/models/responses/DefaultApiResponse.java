@@ -39,4 +39,13 @@ public class DefaultApiResponse<T> {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultApiResponse{" +
+                "message='" + message + '\'' +
+                ", data=" + data +
+                ", status=" + status +
+                '}';
+    }
 }

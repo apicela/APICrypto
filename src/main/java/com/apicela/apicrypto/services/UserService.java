@@ -1,7 +1,7 @@
 package com.apicela.apicrypto.services;
 
 import com.apicela.apicrypto.exceptions.EmailAlreadyInUseException;
-import com.apicela.apicrypto.exceptions.EntityNotFoundException;
+import com.apicela.apicrypto.exceptions.NotFoundException;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.models.User;
 import com.apicela.apicrypto.models.dtos.UserDTO;
@@ -22,18 +22,16 @@ public class UserService {
     }
 
     public Mono<UserDTO> save(UserDTO userDTO) {
-        var user = new User(userDTO);
-        return userRepository.findByMail(user.getMail())
+        return findByMail(userDTO.mail())
                 .flatMap(existingUser -> Mono.<UserDTO>error(new EmailAlreadyInUseException("E-mail already in use")))
                 .switchIfEmpty(
-                        userRepository.save(user)
+                        userRepository.save(new User(userDTO))
                                 .doOnNext(savedUser -> log.info("User saved: {}", savedUser))
                                 .map(savedUser -> new UserDTO(savedUser.getName(), savedUser.getLastName(), savedUser.getMail()))
                                 .onErrorMap(e -> new SaveException("Failed to save user data", e))
 
                 );
     }
-
 
     public Mono<UserDTO> findById(UUID id) {
         return userRepository.findById(id)
@@ -42,7 +40,7 @@ public class UserService {
                         user.getLastName(),
                         user.getMail()
                 ))
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)));
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with ID: " + id)));
     }
 
     public Mono<UserDTO> findByMail(String mail) {
@@ -56,12 +54,12 @@ public class UserService {
 
     public Mono<Void> deleteById(UUID id) {
         return userRepository.findById(id)
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)))
+                .switchIfEmpty(Mono.error(new NotFoundException("Record not found with ID: " + id)))
                 .flatMap(user -> {
                     user.setDeleted(true);
                     return userRepository.save(user);
                 })
-                .then();  // Converte o Mono<User> para Mono<Void>, pois o retorno da operação não precisa do valor
+                .then();
     }
 
 

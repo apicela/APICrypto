@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.exceptions.EntityNotFoundException;
+import com.apicela.apicrypto.exceptions.NotFoundException;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.exceptions.UpdateException;
 import com.apicela.apicrypto.models.Monitoring;
@@ -15,34 +15,39 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Service
 @Log4j2
 public class MonitoringService {
+    final UserService userService;
     MonitoringRepository monitoringRepository;
-    UserService userService;
 
-    public MonitoringService(MonitoringRepository monitoringRepository) {
+    public MonitoringService(MonitoringRepository monitoringRepository, UserService userService) {
         this.monitoringRepository = monitoringRepository;
+        this.userService = userService;
     }
 
-    public Mono<MonitoringDTO> save(MonitoringDTO monitoringDTO) {
-        var monitoring = new Monitoring(monitoringDTO);
-        return monitoringRepository.save(monitoring)
-                .doOnNext(savedMonitoring -> log.info("Monitoring saved {}", savedMonitoring))
-                .map(monitoring1 -> new MonitoringDTO(
-                        monitoring1.getUserId(),
-                        monitoring1.getCoinId(),
-                        monitoring1.getPrice(),
-                        monitoring1.isGreatherThan()
-                ))
-                .onErrorMap(e -> new SaveException("Failed to save monitoring data", e));
+    public Mono<UpdateMonitoringDTO> save(MonitoringDTO monitoringDTO) {
+        return userService.findById(monitoringDTO.userId())
+                .flatMap(x -> {
+                    if (!CoinService.coinsNameHashMap.containsKey(monitoringDTO.coinId())) {
+                        return Mono.error(new NotFoundException("A moeda " + monitoringDTO.coinId() + " não existe."));
+                    }
+                    Monitoring m = new Monitoring(monitoringDTO);
+                    m.setCoinId(CoinService.coinsNameHashMap.get(monitoringDTO.coinId()));
+                    return monitoringRepository.save(m)
+                            .doOnNext(savedMonitoring -> log.info("Monitoring saved {}", savedMonitoring))
+                            .map(monitoring1 -> new UpdateMonitoringDTO(
+                                    monitoring1.getCoinId(),
+                                    monitoring1.getPrice(),
+                                    monitoring1.isGreatherThan()
+                            ))
+                            .onErrorMap(e -> new SaveException("Failed to save monitoring data", e));
+                });
     }
 
     public Mono<Void> deleteById(Long id) {
         return monitoringRepository.findById(id)
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)))
+                .switchIfEmpty(Mono.error(new NotFoundException("Monitoring not found with ID: " + id)))
                 .flatMap(monitoring -> {
                     monitoring.setDeleted(true);
                     return monitoringRepository.save(monitoring);
@@ -57,10 +62,11 @@ public class MonitoringService {
                         monitoring.getCoinId(),
                         monitoring.getPrice(),
                         monitoring.isGreatherThan()))
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Record not found with ID: " + id)));
+                .switchIfEmpty(Mono.error(new NotFoundException("Monitoring not found with ID: " + id)));
     }
 
-    public Flux<List<Long>> getMonitoringIdsForCoin(String coinId) {
+
+    public Flux<Long> getMonitoringIdsForCoin(String coinId) {
         return monitoringRepository.findAllByCoinId(coinId);
     }
 
@@ -82,7 +88,7 @@ public class MonitoringService {
 
     public Mono<Void> update(long id, UpdateMonitoringDTO updateMonitoringDTO) {
         return monitoringRepository.findById(id)
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Monitoring with ID " + id + " not found")))
+                .switchIfEmpty(Mono.error(new NotFoundException("Monitoring with ID " + id + " not found")))
                 .flatMap(existing -> {
                     Monitoring m = new Monitoring(updateMonitoringDTO);
                     m.setId(id);

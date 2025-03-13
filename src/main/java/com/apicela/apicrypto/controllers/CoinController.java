@@ -1,7 +1,6 @@
 package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.Coin;
-import com.apicela.apicrypto.models.dtos.UserDTO;
 import com.apicela.apicrypto.models.responses.CoinListResponseDTO;
 import com.apicela.apicrypto.models.responses.DefaultApiResponse;
 import com.apicela.apicrypto.services.CoinService;
@@ -24,22 +23,23 @@ public class CoinController {
     @Autowired
     CoinService coinService;
 
+
     @GetMapping("/all")
-    public  Mono<ResponseEntity<Object>> getAllCoins() {
+    public Mono<ResponseEntity<Object>> getAllCoins() {
         return coinService.listAllCoins()
-                .collectList()
-                .map(coins -> {
+                .collectList() // Coleta o Flux<Coin> em um Mono<List<Coin>>
+                .flatMap(coins -> {
                     DefaultApiResponse<CoinListResponseDTO> response = new DefaultApiResponse<>(
-                        "ok",
-                        new CoinListResponseDTO(coins, LocalDateTime.now()),
-                        HttpStatus.OK.value());
+                            "ok",
+                            new CoinListResponseDTO(coins, LocalDateTime.now()),
+                            HttpStatus.OK.value());
                     log.info("{}", response);
-                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(response));
                 });
     }
 
-    @GetMapping()
-    public  Mono<ResponseEntity<Object>> getCoinById(@RequestParam(value = "name") String name) {
+    @GetMapping("/{name}")
+    public Mono<ResponseEntity<Object>> getCoinById(@PathVariable(value = "name") String name) {
         return coinService.findById(name)
                 .map(coin -> {
                     DefaultApiResponse<Coin> response = new DefaultApiResponse<>(

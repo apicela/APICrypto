@@ -49,7 +49,7 @@ public class CacheConfig {
                 .maximumSize(20)
                 .removalListener((key, value, cause) -> {
                     if (cause == com.github.benmanes.caffeine.cache.RemovalCause.EXPIRED) {
-                        System.out.println("Cache de 10 minutos expirado - chave: " + key + ", valor: " + value);
+                        System.out.println("Cache de 1 minuto expirado - chave: " + key + ", valor: " + value);
                     }
                 });
     }
