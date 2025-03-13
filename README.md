@@ -248,69 +248,72 @@ Retorna a lista de todas as moedas disponíveis no sistema, juntamente com a dat
 - **200 OK**: Lista de moedas retornada com sucesso.
   ```json
    {
-      "coins": [
-          {
-              "id": "bitcoin",
-              "symbol": "btc",
-              "name": "Bitcoin",
-              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-              "currentPrice": 486704.0,
-              "marketCap": 9648524573031,
-              "marketCapRank": 1,
-              "fullyDilutedValuation": 9648524573031,
-              "totalVolume": 235117073655,
-              "high24h": 491347.0,
-              "low24h": 470353.0,
-              "priceChange24h": 7650.9,
-              "priceChangePercentage24h": 1.59709,
-              "marketCapChange24h": 131915550617,
-              "marketCapChangePercentage24h": 1.38616,
-              "circulatingSupply": 19836071,
-              "totalSupply": 19836071,
-              "maxSupply": 21000000,
-              "ath": 672350.0,
-              "athChangePercentage": -27.7757,
-              "athDate": [
-                  2024,
-                  12,
-                  26,
-                  0,
-                  20,
-                  46,
-                  738000000
-              ],
-              "atl": 149.66,
-              "atlChangePercentage": 324371.85148,
-              "atlDate": [
-                  2013,
-                  7,
-                  5,
-                  0,
-                  0
-              ],
-              "lastUpdated": [
-                  2025,
-                  3,
-                  13,
-                  3,
-                  13,
-                  34,
-                  260000000
-              ],
-              "priceChanges": {
-                  "priceChangePercentage1h": -0.24174978,
-                  "priceChangePercentage24h": 1.597088,
-                  "priceChangePercentage7d": -7.6695323,
-                  "priceChangePercentage14d": -0.51532936,
-                  "priceChangePercentage30d": -14.035927,
-                  "priceChangePercentage200d": 38.22119,
-                  "priceChangePercentage1y": 36.04486
-              }
-          },
-          ...
-      ],
-    "lastUpdated": "13/03/2025 00:13:41",
-    "message": "ok"
+      "message": "ok",
+      "data": {
+        "coins": [
+            {
+                "id": "bitcoin",
+                "symbol": "btc",
+                "name": "Bitcoin",
+                "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+                "currentPrice": 486704.0,
+                "marketCap": 9648524573031,
+                "marketCapRank": 1,
+                "fullyDilutedValuation": 9648524573031,
+                "totalVolume": 235117073655,
+                "high24h": 491347.0,
+                "low24h": 470353.0,
+                "priceChange24h": 7650.9,
+                "priceChangePercentage24h": 1.59709,
+                "marketCapChange24h": 131915550617,
+                "marketCapChangePercentage24h": 1.38616,
+                "circulatingSupply": 19836071,
+                "totalSupply": 19836071,
+                "maxSupply": 21000000,
+                "ath": 672350.0,
+                "athChangePercentage": -27.7757,
+                "athDate": [
+                    2024,
+                    12,
+                    26,
+                    0,
+                    20,
+                    46,
+                    738000000
+                ],
+                "atl": 149.66,
+                "atlChangePercentage": 324371.85148,
+                "atlDate": [
+                    2013,
+                    7,
+                    5,
+                    0,
+                    0
+                ],
+                "lastUpdated": [
+                    2025,
+                    3,
+                    13,
+                    3,
+                    13,
+                    34,
+                    260000000
+                ],
+                "priceChanges": {
+                    "priceChangePercentage1h": -0.24174978,
+                    "priceChangePercentage24h": 1.597088,
+                    "priceChangePercentage7d": -7.6695323,
+                    "priceChangePercentage14d": -0.51532936,
+                    "priceChangePercentage30d": -14.035927,
+                    "priceChangePercentage200d": 38.22119,
+                    "priceChangePercentage1y": 36.04486
+                }
+            },
+            ...
+        ],
+      "lastUpdated": "13/03/2025 00:13:41"
+    },
+    "status": 200
   }
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
@@ -334,33 +337,67 @@ Retorna os detalhes de uma moeda específica pelo seu identificador.
 
 - **200 OK**: Moeda encontrada com sucesso.
   ```json
-  {
-    "id": "bitcoin",
-    "symbol": "BTC",
-    "name": "Bitcoin",
-    "image": "https://example.com/bitcoin.png",
-    "currentPrice": 50000.0,
-    "marketCap": 1000000000,
-    "marketCapRank": 1,
-    "fullyDilutedValuation": 1200000000,
-    "totalVolume": 500000000,
-    "high24h": 51000.0,
-    "low24h": 49000.0,
-    "priceChange24h": 200.0,
-    "priceChangePercentage24h": 0.4,
-    "marketCapChange24h": 5000000,
-    "marketCapChangePercentage24h": 0.5,
-    "circulatingSupply": 19000000,
-    "totalSupply": 21000000,
-    "maxSupply": 21000000,
-    "ath": 69000.0,
-    "athChangePercentage": -27.5,
-    "athDate": "2021-11-10T00:00:00",
-    "atl": 67.81,
-    "atlChangePercentage": 73700.0,
-    "atlDate": "2013-07-05T00:00:00",
-    "lastUpdated": "2025-03-06T12:00:00",
-    "priceChanges": {}
+   {
+      "message": "ok",
+      "data": {
+          "id": "bitcoin",
+          "symbol": "btc",
+          "name": "Bitcoin",
+          "image": "https://coin-images.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400",
+          "currentPrice": 485028.0,
+          "marketCap": 9616206257234,
+          "marketCapRank": 1,
+          "fullyDilutedValuation": 9616206257234,
+          "totalVolume": 214699592544,
+          "high24h": 491347.0,
+          "low24h": 470353.0,
+          "priceChange24h": 1627.0,
+          "priceChangePercentage24h": 1.98403,
+          "marketCapChange24h": 29782163594,
+          "marketCapChangePercentage24h": 1.82913,
+          "circulatingSupply": 19836071,
+          "totalSupply": 19836071,
+          "maxSupply": 21000000,
+          "ath": 672350.0,
+          "athChangePercentage": -27.91197,
+          "athDate": [
+              2024,
+              12,
+              26,
+              0,
+              20,
+              46,
+              738000000
+          ],
+          "atl": 149.66,
+          "atlChangePercentage": 323759.65868,
+          "atlDate": [
+              2013,
+              7,
+              5,
+              0,
+              0
+          ],
+          "lastUpdated": [
+              2025,
+              3,
+              13,
+              4,
+              8,
+              4,
+              884000000
+          ],
+          "priceChanges": {
+              "priceChangePercentage1h": -0.3174,
+              "priceChangePercentage24h": 1.82366,
+              "priceChangePercentage7d": -7.94838,
+              "priceChangePercentage14d": -1.81611,
+              "priceChangePercentage30d": -14.13711,
+              "priceChangePercentage200d": 37.74507,
+              "priceChangePercentage1y": 35.54606
+          }
+      },
+      "status": 200
   }
   ```
 - **404 Not Found**: Moeda não encontrada.
