@@ -68,7 +68,7 @@ Cria um novo usuário no sistema.
 
 ### Obter usuário por ID
 
-**Rota:** `GET /user?id={id}`
+**Rota:** `GET /user/{id}`
 
 **Descrição:**
 Busca um usuário específico pelo seu identificador único (UUID).
@@ -90,7 +90,7 @@ Busca um usuário específico pelo seu identificador único (UUID).
 - **404 Not Found**: Usuário não encontrado.
   ```json
   {
-      "message": "Record not found with ID: e98a4fa8-1ad7-4e7c-87a9-21808c668451",
+      "message": "User not found with ID: ac5e383d-f0d7-4798-9995-2d181a3070e0",
       "data": null,
       "status": 404
   }
@@ -108,7 +108,7 @@ Busca um usuário específico pelo seu identificador único (UUID).
 
 ### Deletar usuário por ID
 
-**Rota:** `DELETE /user?id={id}`
+**Rota:** `DELETE /user/{id}`
 
 **Descrição:**
 Deleta um usuário específico pelo seu identificador único (UUID).
@@ -126,7 +126,7 @@ Deleta um usuário específico pelo seu identificador único (UUID).
 - **404 Not Found**: Usuário não encontrado.
   ```json
   {
-      "message": "Record not found with ID: e98a4fa8-1ad7-4e7c-87a9-21808c668451",
+      "message": "User not found with ID: ac5e383d-f0d7-4798-9995-2d181a3070e0",
       "data": null,
       "status": 404
   }
@@ -163,13 +163,31 @@ Salva um novo registro de monitoramento.
 - **201 Created**: Registro de monitoramento criado com sucesso.
   ```json
   {
-    "message": "Monitoramento salvo com sucesso"
+      "message": "Monitoring record created successfully",
+      "data": {
+          "coinId": "btc",
+          "price": 50000.0,
+          "greatherThan": true
+      },
+      "status": 201
   }
   ```
 - **400 Bad Request**: Dados inválidos ou ausentes na requisição.
   ```json
   {
-    "message": "Erro na solicitação"
+      "message": "Validation Error",
+      "errors": {
+          "userId": "User ID cannot be empty"
+      },
+      "status": 400
+  }
+  ```
+  - **404 Not Found**: User ID associado ao Monitoramento não encontrado.
+  ```json
+  {
+      "message": "User not found with ID: ac5e383d-f0d7-4798-9995-2d181a3070e0",
+      "data": null,
+      "status": 404
   }
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
@@ -195,16 +213,21 @@ Obtém um registro de monitoramento pelo ID informado.
 - **200 OK**: Registro encontrado.
   ```json
   {
-    "userId": "550e8400-e29b-41d4-a716-446655440000",
-    "coinId": "BTC",
-    "price": 50000.0,
-    "greatherThan": true
+      "message": "ok",
+      "data": {
+          "coinId": "btc",
+          "price": 50000.0,
+          "greatherThan": true
+      },
+      "status": 200
   }
   ```
 - **404 Not Found**: Registro não encontrado.
   ```json
   {
-    "message": "Monitoramento não encontrado"
+      "message": "Monitoring not found with ID: 1",
+      "data": null,
+      "status": 404
   }
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
@@ -230,7 +253,17 @@ Remove um registro de monitoramento pelo ID informado.
 - **200 OK**: Registro deletado com sucesso.
   ```json
   {
-    "message": "Monitoramento {id} deletado com sucesso!"
+      "message": "ok",
+      "data": null,
+      "status": 200
+  }
+  ```
+  - **404 Not Found**: Registro não encontrado.
+  ```json
+  {
+      "message": "Monitoring not found with ID: 1",
+      "data": null,
+      "status": 404
   }
   ```
 - **500 Internal Server Error**: Erro interno do servidor.
@@ -335,7 +368,7 @@ Retorna a lista de todas as moedas disponíveis no sistema, juntamente com a dat
 
 ### Obter uma moeda pelo NAME
 
-**Rota:** `GET /coins?name={name}`
+**Rota:** `GET /coins/{name}`
 
 **Descrição:**
 Retorna os detalhes de uma moeda específica pelo seu identificador.
