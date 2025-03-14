@@ -1,3 +1,65 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-000?style=for-the-badge&logo=java&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring-000?style=for-the-badge&logo=spring&logoColor=green"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-black?style=for-the-badge&logo=postgresql&logoColor=blue"/>
+</p>
+
+# 📈 Monitoramento de Criptomoedas
+
+Esta aplicação é uma **API de monitoramento de criptomoedas** que permite que usuários cadastrem alertas personalizados para serem notificados por e-mail quando determinada moeda atingir um preço específico.
+
+A aplicação consome dados da [API pública da CoinGecko](https://www.coingecko.com/), de forma assíncrona(API Reativa para uma melhor performance) e realiza verificações automáticas a cada 15 minutos para avaliar se as condições dos alertas cadastrados foram atendidas.
+
+---
+
+## ⚙️ Funcionalidades
+
+- 🔔 **Cadastro de alertas de preço**  
+  Os usuários podem configurar monitoramentos com:
+  - `coinId`: moeda a ser monitorada
+  - `price`: valor de alerta
+  - `greatherThan`: define se o alerta será disparado quando o preço **subir acima** (`true`) ou **cair abaixo** (`false`) do valor definido
+
+- ✏️ **Atualização e remoção lógica de monitoramentos**
+  - Os monitoramentos podem ser atualizados a qualquer momento
+  - A exclusão é lógica (soft delete), permitindo manter o histórico no sistema
+
+- 📬 **Envio automático de e-mails**
+  - A cada 15 minutos, a aplicação:
+    1. Atualiza os preços das criptomoedas via CoinGecko
+    2. Verifica os monitoramentos ativos
+    3. Envia e-mails personalizados aos usuários que possuem alertas atingidos
+
+- 🚀 **Cache para alto desempenho**
+
+  - Evita chamadas desnecessárias à API externa e melhora a performance da aplicação
+  - Houve melhoria de no mínimo 75% no tempo de resposta para obter todas moedas
+---
+
+## 🛠️ Tecnologias e Conceitos
+
+- Java 17 + Spring Boot + WebFlux
+- Agendamentos com `@Scheduled`
+- Cache com `@Cacheable` (configurado com Caffeine)
+- Integração com API REST externa (CoinGecko)
+- Programação reativa com Project Reactor (`Mono`, `Flux`)
+- Envio de e-mails automáticos
+- Manipulação de erros customizada (exceções personalizadas)
+
+---
+
+## 🧪 Exemplo de uso
+
+1. Um usuário cadastra um alerta para ser notificado quando o **Bitcoin** ultrapassar **$70.000**
+2. A cada 15 minutos, o sistema consulta os dados atualizados da CoinGecko
+3. Quando o preço do Bitcoin ultrapassa o valor definido, um e-mail é enviado para o usuário
+
+---
+
+> 💡 Ideal para sistemas de notificação de preços de ativos digitais, automações financeiras e serviços personalizados para entusiastas de criptomoedas.
+
+# Endpoints
+## User
 ### Criar um novo usuário
 
 **Rota:** `POST /user`
@@ -139,7 +201,7 @@ Deleta um usuário específico pelo seu identificador único (UUID).
       "status": 500
   }
   ```
-
+## Monitoring
 ### Criar um novo monitoramento
 
 **Rota:** `POST /monitoring`
@@ -274,7 +336,7 @@ Remove um registro de monitoramento pelo ID informado.
       "status": 500
   }
   ```
-
+## Coin
 ### Obter todas as moedas
 
 **Rota:** `GET /coins/all`
