@@ -49,11 +49,6 @@ public class CoinService {
         this.mailService = mailService;
     }
 
-    @PostConstruct
-    public void init() {
-        updateCoinsCache();
-    }
-
     @Cacheable(value = "cache10Min", key = "'listAllCoinsCache'", sync = true)
     public Flux<Coin> listAllCoins() {
         String COINS_ENDPOINT = "/coins/markets";
@@ -66,11 +61,6 @@ public class CoinService {
                 .doOnNext(this::addToHashMapInBatch)
                 .flatMapMany(Flux::fromIterable)
                 .doOnNext(coin -> checkAndNotify((coin)));
-    }
-
-    @Scheduled(cron = "0 */15 8-23 * * *")
-    public void updateCoinsCache() {
-        listAllCoins().subscribe();
     }
 
     private void addToHashMapInBatch(List<Coin> coins) {
