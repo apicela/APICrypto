@@ -1,6 +1,5 @@
 package com.apicela.apicrypto.models;
 
-import com.apicela.apicrypto.models.dtos.UserDTO;
 import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Table("users")
 @Getter
 @Setter
-public class User implements UserDetails {
+public class UserModel implements UserDetails {
     @Id
     private UUID id;
     private String name;
@@ -28,23 +27,23 @@ public class User implements UserDetails {
     private String mail;
     private String password;
     private boolean isDeleted = false;
-    List<UserRole> roles = new ArrayList<>();
+    private List<String> roles = new ArrayList<>();
 
-    public User(RegisterUserDTO userDTO) {
+    public UserModel(RegisterUserDTO userDTO) {
         this.name = userDTO.name();
         this.lastName = userDTO.lastName();
         this.mail = userDTO.mail();
         this.password = new BCryptPasswordEncoder().encode(userDTO.password());
-        this.roles.add(UserRole.ROLE_DEFAULT);
+        this.roles.add(UserRole.ROLE_DEFAULT.name());
     }
 
-    public User() {
+    public UserModel() {
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .map(role -> new SimpleGrantedAuthority(role))
                 .toList();
     }
 

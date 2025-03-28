@@ -1,6 +1,6 @@
 package com.apicela.apicrypto.services;
 
-import com.apicela.apicrypto.models.User;
+import com.apicela.apicrypto.models.UserModel;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -18,12 +18,12 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user){
+    public String generateToken(UserModel userModel){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("auth-apicela")
-                    .withSubject(user.getMail())
+                    .withSubject(userModel.getMail())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
             return token;

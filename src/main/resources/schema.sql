@@ -6,8 +6,9 @@ CREATE TABLE IF NOT EXISTS users
     last_name  VARCHAR(255)          NOT NULL,
     mail       VARCHAR(255)          NOT NULL UNIQUE,     -- E-mail único
     password   VARCHAR(255)          NOT NULL,
-    is_deleted BOOLEAN DEFAULT FALSE NOT NULL             -- Campo de controle de exclusão lógico
-);
+    is_deleted BOOLEAN DEFAULT FALSE NOT NULL,             -- Campo de controle de exclusão lógico
+    roles      TEXT                                          -- Roles armazenadas como texto (ex: "ROLE_ADMIN,ROLE_USER")
+    );
 
 -- Tabela Monitorings
 CREATE TABLE IF NOT EXISTS monitorings

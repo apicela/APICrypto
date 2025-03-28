@@ -62,7 +62,7 @@ A aplicação consome dados da [API pública da CoinGecko](https://www.coingecko
 ## User
 ### Criar um novo usuário
 
-**Rota:** `POST /user`
+**Rota:** `POST /userModel`
 
 **Descrição:**
 Cria um novo usuário no sistema.
@@ -130,7 +130,7 @@ Cria um novo usuário no sistema.
 
 ### Obter usuário por ID
 
-**Rota:** `GET /user/{id}`
+**Rota:** `GET /userModel/{id}`
 
 **Descrição:**
 Busca um usuário específico pelo seu identificador único (UUID).
@@ -170,7 +170,7 @@ Busca um usuário específico pelo seu identificador único (UUID).
 
 ### Deletar usuário por ID
 
-**Rota:** `DELETE /user/{id}`
+**Rota:** `DELETE /userModel/{id}`
 
 **Descrição:**
 Deleta um usuário específico pelo seu identificador único (UUID).
