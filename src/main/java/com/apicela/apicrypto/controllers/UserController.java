@@ -1,6 +1,7 @@
 package com.apicela.apicrypto.controllers;
 
 import com.apicela.apicrypto.models.dtos.UserDTO;
+import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import com.apicela.apicrypto.models.responses.DefaultApiResponse;
 import com.apicela.apicrypto.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "CREATE", description = "Here, you can create a new object for your entity")
-    public Mono<ResponseEntity<Object>> saveUser(@RequestBody @Valid UserDTO userDTO) {
+    public Mono<ResponseEntity<Object>> saveUser(@RequestBody @Valid RegisterUserDTO userDTO) {
         return userService.save(userDTO)
                 .map(savedUser -> {
                     DefaultApiResponse<UserDTO> response = new DefaultApiResponse<>(

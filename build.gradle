@@ -26,6 +26,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
     annotationProcessor 'org.projectlombok:lombok' // Necessário para gerar as anotações do Lombok
 
     // swagger
@@ -41,6 +43,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     implementation 'io.r2dbc:r2dbc-h2:1.0.0.RELEASE'
 
+    // jwt
+    implementation 'com.auth0:java-jwt:4.4.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

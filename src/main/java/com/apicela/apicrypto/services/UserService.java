@@ -5,6 +5,7 @@ import com.apicela.apicrypto.exceptions.NotFoundException;
 import com.apicela.apicrypto.exceptions.SaveException;
 import com.apicela.apicrypto.models.User;
 import com.apicela.apicrypto.models.dtos.UserDTO;
+import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import com.apicela.apicrypto.repositories.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Mono<UserDTO> save(UserDTO userDTO) {
+    public Mono<UserDTO> save(RegisterUserDTO userDTO) {
         return findByMail(userDTO.mail())
                 .flatMap(existingUser -> Mono.<UserDTO>error(new EmailAlreadyInUseException("E-mail already in use")))
                 .switchIfEmpty(

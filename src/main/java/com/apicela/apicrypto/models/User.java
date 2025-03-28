@@ -1,13 +1,26 @@
 package com.apicela.apicrypto.models;
 
 import com.apicela.apicrypto.models.dtos.UserDTO;
+import com.apicela.apicrypto.models.requests.RegisterUserDTO;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Table("users")
-public class User {
+@Getter
+@Setter
+public class User implements UserDetails {
     @Id
     private UUID id;
     private String name;
@@ -15,59 +28,29 @@ public class User {
     private String mail;
     private String password;
     private boolean isDeleted = false;
+    List<UserRole> roles = new ArrayList<>();
 
-    public User(UserDTO userDTO) {
+    public User(RegisterUserDTO userDTO) {
         this.name = userDTO.name();
         this.lastName = userDTO.lastName();
         this.mail = userDTO.mail();
-        this.password = "123";
+        this.password = new BCryptPasswordEncoder().encode(userDTO.password());
+        this.roles.add(UserRole.ROLE_DEFAULT);
     }
 
     public User() {
     }
 
-    public void setDeleted(boolean deleted) {
-        this.isDeleted = deleted;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .toList();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    @Override
+    public String getUsername() {
+        return this.mail;
     }
 
     @Override
