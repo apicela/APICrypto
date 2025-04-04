@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -67,12 +68,13 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     @Override
-    public Mono<UserDetails> findByUsername(String username) {
-        var x =  userRepository.findByMail(username)
-                .map(user -> User.withUsername(user.getMail())
-                        .password(user.getPassword())
-                        .roles("USER")
-                        .build());
-        return x;
+    public Mono<UserDetails> findByUsername(String email) {
+        System.out.println("Searching for user with email: " + email);
+        userRepository.findByMail(email)
+                .subscribe(user -> System.out.println("xxx: " + user));
+        return userRepository.findByMail(email)
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found with email: " + email)))
+                .doOnNext(userModel -> System.out.println("User found: " + userModel))
+                .cast(UserDetails.class);
     }
 }

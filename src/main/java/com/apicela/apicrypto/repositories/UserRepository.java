@@ -17,4 +17,6 @@ public interface UserRepository extends ReactiveCrudRepository<UserModel, UUID> 
     @Query("SELECT * FROM users WHERE mail = :mail AND is_deleted = false")
     Mono<UserModel> findByMail(@Param("mail") String mail);
 
+    Mono<UserModel> findByMailAndIsDeletedFalse(String mail);
+
 }

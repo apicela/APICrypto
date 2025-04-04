@@ -44,8 +44,11 @@ dependencies {
     implementation 'io.r2dbc:r2dbc-h2:1.0.0.RELEASE'
 
     // jwt
-    implementation 'com.auth0:java-jwt:4.4.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation("io.jsonwebtoken:jjwt:0.12.6")
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-orgjson:0.12.6'
 }
 
 tasks.named('test') {
