@@ -9,9 +9,7 @@ import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import com.apicela.apicrypto.repositories.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -27,12 +25,12 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     public Mono<UserDTO> save(RegisterUserDTO userDTO) {
-        return findByMail(userDTO.mail())
-                .flatMap(existingUser -> Mono.<UserDTO>error(new EmailAlreadyInUseException("E-mail already in use")))
+        return findByMail(userDTO.email())
+                .flatMap(existingUser -> Mono.<UserDTO>error(new EmailAlreadyInUseException("E-email already in use")))
                 .switchIfEmpty(
                         userRepository.save(new UserModel(userDTO))
                                 .doOnNext(savedUserModel -> log.info("User saved: {}", savedUserModel))
-                                .map(savedUserModel -> new UserDTO(savedUserModel.getName(), savedUserModel.getLastName(), savedUserModel.getMail()))
+                                .map(savedUserModel -> new UserDTO(savedUserModel.getName(), savedUserModel.getLastName(), savedUserModel.getEmail()))
                                 .onErrorMap(e -> new SaveException("Failed to save user data", e))
 
                 );
@@ -43,17 +41,17 @@ public class UserService implements ReactiveUserDetailsService {
                 .map(userModel -> new UserDTO(
                         userModel.getName(),
                         userModel.getLastName(),
-                        userModel.getMail()
+                        userModel.getEmail()
                 ))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found with ID: " + id)));
     }
 
     public Mono<UserDTO> findByMail(String mail) {
-        return userRepository.findByMail(mail)
+        return userRepository.findByEmail(mail)
                 .map(userModel -> new UserDTO(
                         userModel.getName(),
                         userModel.getLastName(),
-                        userModel.getMail()
+                        userModel.getEmail()
                 ));
     }
 
@@ -68,13 +66,7 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     @Override
-    public Mono<UserDetails> findByUsername(String email) {
-        System.out.println("Searching for user with email: " + email);
-        userRepository.findByMail(email)
-                .subscribe(user -> System.out.println("xxx: " + user));
-        return userRepository.findByMail(email)
-                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found with email: " + email)))
-                .doOnNext(userModel -> System.out.println("User found: " + userModel))
-                .cast(UserDetails.class);
+    public Mono<UserDetails> findByUsername(String username) {
+        return userRepository.findByMail(username);
     }
 }

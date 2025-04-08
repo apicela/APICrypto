@@ -1,20 +1,13 @@
 package com.apicela.apicrypto.controllers;
 
-import com.apicela.apicrypto.models.UserModel;
 import com.apicela.apicrypto.models.dtos.UserDTO;
-import com.apicela.apicrypto.models.requests.AuthenticationDTO;
-import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import com.apicela.apicrypto.models.responses.DefaultApiResponse;
-import com.apicela.apicrypto.models.responses.LoginResponseDTO;
-import com.apicela.apicrypto.services.TokenService;
 import com.apicela.apicrypto.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -30,23 +23,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    @PostMapping("/register")
-    @Operation(summary = "CREATE", description = "Here, you can create a new object for your entity")
-    public Mono<ResponseEntity<Object>> saveUser(@RequestBody @Valid RegisterUserDTO userDTO) {
-        return userService.save(userDTO)
-                .map(savedUser -> {
-                    DefaultApiResponse<UserDTO> response = new DefaultApiResponse<>(
-                            "User created successfully",
-                            savedUser,
-                            HttpStatus.CREATED.value()
-                    );
-                    log.info("{}", response);
-                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-                });
-    }
-
-
 
     @GetMapping("/{id}")
     @Operation(summary = "Find object by Id", description = "Here, you can get a specific object filtering by your ID")

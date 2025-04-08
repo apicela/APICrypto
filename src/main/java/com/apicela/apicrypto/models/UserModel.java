@@ -4,7 +4,6 @@ import com.apicela.apicrypto.models.requests.RegisterUserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,7 +23,7 @@ public class UserModel implements UserDetails {
     private UUID id;
     private String name;
     private String lastName;
-    private String mail;
+    private String email;
     private String password;
     private boolean isDeleted = false;
     private List<String> roles = new ArrayList<>();
@@ -32,7 +31,7 @@ public class UserModel implements UserDetails {
     public UserModel(RegisterUserDTO userDTO) {
         this.name = userDTO.name();
         this.lastName = userDTO.lastName();
-        this.mail = userDTO.mail();
+        this.email = userDTO.email();
         this.password = new BCryptPasswordEncoder().encode(userDTO.password());
         this.roles.add(UserRole.ROLE_DEFAULT.name());
     }
@@ -49,7 +48,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.mail;
+        return this.email;
     }
 
     @Override
@@ -57,7 +56,7 @@ public class UserModel implements UserDetails {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", mail='" + mail + '\'' +
+                ", email='" + email + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
     }

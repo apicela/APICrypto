@@ -79,7 +79,7 @@ public class MonitoringService {
                         String title = "O Preço de " + coin.name() + " mudou!";
                         String msg = "Olá, " + userToBeNotified.name() + "!\n" +
                                 "O preço da moeda " + coin.name() + " alcançou seu preço de alerta!";
-                        return new Mail(userToBeNotified.mail(), title, msg);
+                        return new Mail(userToBeNotified.email(), title, msg);
                     });
         } else {
             return Mono.empty();
