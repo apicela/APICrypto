@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users
     id         UUID    DEFAULT RANDOM_UUID() PRIMARY KEY, -- O UUID será gerado automaticamente
     name       VARCHAR(255)          NOT NULL,
     last_name  VARCHAR(255)          NOT NULL,
-    mail       VARCHAR(255)          NOT NULL UNIQUE,     -- E-email único
+    email       VARCHAR(255)          NOT NULL UNIQUE,     -- E-email único
     password   VARCHAR(255)          NOT NULL,
     is_deleted BOOLEAN DEFAULT FALSE NOT NULL,             -- Campo de controle de exclusão lógico
     roles      TEXT                                          -- Roles armazenadas como texto (ex: "ROLE_ADMIN,ROLE_USER")

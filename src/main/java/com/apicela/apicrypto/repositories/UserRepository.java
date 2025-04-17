@@ -14,12 +14,7 @@ import java.util.UUID;
 public interface UserRepository extends ReactiveCrudRepository<UserModel, UUID> {
     @Query("SELECT * FROM users WHERE id = :id AND is_deleted = false")
     Mono<UserModel> findByIdAndNotDeleted(@Param("id") UUID id);
-
-    @Query("SELECT * FROM users WHERE mail = :mail AND is_deleted = false")
-    Mono<UserModel> findByEmail(@Param("email") String mail);
-
-    Mono<UserModel> findByMailAndIsDeletedFalse(String mail);
-
-    Mono<UserDetails> findByMail(String mail);
+    @Query("SELECT * FROM users WHERE email = :email AND is_deleted = false")
+    Mono<UserModel> findByEmail(@Param("email") String email);
 
 }
